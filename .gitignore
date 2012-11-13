@@ -1,6 +1,6 @@
 # FOR ANDROID APP
 # Mac specifics
-*.DS_Store
+.DS_Store
 
 # built application files
 *.apk
