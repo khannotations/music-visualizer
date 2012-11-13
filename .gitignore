@@ -11,12 +11,12 @@
 *.class
 
 # generated files
-visualizerapp/bin/
-visualizerapp/gen/
+soundulous/bin/
+soundulous/gen/
 
 # Local configuration file (sdk path, etc)
-visualizerapp/local.properties
+soundulous/local.properties
 
 # Eclipse project files
-visualizerapp/.classpath
-visualizerapp/.project
+soundulous/.classpath
+soundulous/.project
