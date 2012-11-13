@@ -3,5 +3,5 @@
 ### Hari Ganesan, Rafi Khan, Mike Levine, Jacob Metrick
 ##### Yale University, November 2012
 
-> visualizerapp: eclipse project for android app  
+> soundulous: eclipse project for android app  
 > server: server code for processing and dispersing visualization data  
