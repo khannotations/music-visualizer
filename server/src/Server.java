@@ -7,7 +7,6 @@ import java.net.*;
 
 public class Server {
 	
-<<<<<<< HEAD
     private ServerSocket welcomeSocket;
 
     public final static int THREAD_COUNT = 3;
@@ -63,11 +62,4 @@ public class Server {
 	
     } // end of run
 }
-=======
-	public static void main(String[] getBitches) { // fuck yeah!
-    for(int i=0; i<getBitches.length(); i++) {
-      System.out.println("Mo money-"+i+": "+getBitches[i])
-    }
-  }
-}
->>>>>>> f9874b040c586937ada7ba753b1efff68bb22825
+
