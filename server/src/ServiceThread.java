@@ -64,7 +64,7 @@ public class ServiceThread extends Thread {
 	    String meV = map.get("meV");*/
 	    String action = path[0];
       if(action.equals("/new")) {
-        createSession();
+        SessionManager.createSession();
       } else if (action.equals("/join")) {
         joinSession(map.get("sessionCode"));
       } else if (action.equals("/touch")) {
