@@ -29,6 +29,9 @@ public class SessionManager {
   public boolean joinSession(String sessionId) {
     return true;
   }
+  public String getSessionId() {
+    return sessionId;
+  }
 
   public static SessionManager getSession(String sessionId) {
     return sessionsMap.get(sessionId);

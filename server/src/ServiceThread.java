@@ -69,9 +69,8 @@ public class ServiceThread extends Thread {
         connSock.close();
         return;
       }
-      String out = action; //TODO Fix this
 	    outputResponseHeader();
-	    outputResponseBody(out);
+	    outputResponseBody(mySession.getSessionId());
 	    connSock.close();
     } catch (Exception e) {
     }
