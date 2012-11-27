@@ -1,16 +1,9 @@
 /*
  * 
  */
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.StringWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
+import java.net.*;
 import org.json.simple.JSONValue;
 
 public class ServiceThread extends Thread {
@@ -18,8 +11,10 @@ public class ServiceThread extends Thread {
   private Map<String, String> updateTable;
   private BufferedReader inFromClient;
   private DataOutputStream outToClient;
-  public ServiceThread(ServerSocket welcomeSocket,
-  Map<String, String> updateTable) {
+  private SessionManager mySession;
+  public ServiceThread(ServerSocket welcomeSocket, 
+    Map<String, String> updateTable) {
+
     this.welcomeSocket = welcomeSocket;
   }
   public void run() {
@@ -64,9 +59,9 @@ public class ServiceThread extends Thread {
 	    String meV = map.get("meV");*/
 	    String action = path[0];
       if(action.equals("/new")) {
-        SessionManager.createSession();
+        mySession = new SessionManager();
       } else if (action.equals("/join")) {
-        joinSession(map.get("sessionCode"));
+        mySession.joinSession(map.get("sessionCode"));
       } else if (action.equals("/touch")) {
           //TODO
       } else {
