@@ -33,7 +33,7 @@ public class ServiceThread extends Thread {
 			}
 		}
 		while (true) {
-			// get a new request connection
+			// Get a new request connection
 			Socket s = null;
 			synchronized (welcomeSocket) {
 				try {
@@ -41,19 +41,20 @@ public class ServiceThread extends Thread {
 					System.out.println("Thread "+this+" process request "+s);
 				} catch (IOException e) {
 				}
-			} // end of extract a request
+			}
 			processRequest(s);
-		} // end while
-	} // end run
+		}
+	}
 	private void processRequest(Socket connSock) {
 		try {
-			// create read stream to get input
+			// Create read stream to get input
 			inFromClient = new BufferedReader(new InputStreamReader(connSock.getInputStream()));
 			outToClient = new DataOutputStream(connSock.getOutputStream());
 			// Map to store parameters
 			Map<String, String> map = new HashMap<String, String>();
 			
 		    String query = inFromClient.readLine();
+		    System.out.println("Query: "+query);
 		    String[] request = query.split("\\s");
 		    if (request.length < 2 || !request[0].equals("GET")) {
 			    outputError(500, "Bad request");
@@ -70,31 +71,37 @@ public class ServiceThread extends Thread {
 			    	map.put(name, value);
 			    } 
 		    }
-		    //Leaving this for reference on how to access http parameters
+		    // To get a URL variable: 
 		    // String variable = map.get("varName");
+		    mySession = sessionMap.get(map.get("id"));
+		    String outputString = "Nothing happened!";
+		    if(mySession == null && !action.equals("/new")) {
+		    	outputError(404, "No such session found");
+	    		connSock.close();
+	    		return;
+		    }
 		    if(action.equals("/new")) {
 		    	mySession = new SessionManager();
 		    	sessionMap.put(mySession.getSessionId(), mySession);
-		    	System.out.println("New session " + mySession.getSessionId() +" created!");
+		    	outputString = "Created new session with ID "+ mySession.getSessionId();
+		    	outputString += ". Total: "+sessionMap.size();
 		    } else if (action.equals("/join")) {
-		    	mySession = sessionMap.get(map.get("id"));
 		    	mySession.joinSession();
 		    } else if (action.equals("/touch")) {
 		    	float startX = Float.parseFloat(map.get("startX"));
 		    	float startY = Float.parseFloat(map.get("startY"));
 		    	float endX = Float.parseFloat(map.get("endX"));
 		    	float endY = Float.parseFloat(map.get("endY"));
-		    	String sessionCode = map.get("id");
-		    	mySession = sessionMap.get(sessionCode);
 		    	mySession.updateBitMap(startX, startY, endX, endY);
-		    	System.out.println("Updated session "+ sessionCode + "!");
+		    	outputString = "BitMap for "+mySession.getSessionId()+" updated. Scroll down to see it.\n";
+		    	outputString += mySession.printBitMap();
 		    } else {
-		    	outputError(500, "Bad request");
+		    	outputError(404, "No such path.");
 		    	connSock.close();
 		    	return;
 		    }
 		    outputResponseHeader();
-		    outputResponseBody(mySession.printBitMap());
+		    outputResponseBody(outputString);
 		    connSock.close();
 		} catch (Exception e) {
 			e.printStackTrace();

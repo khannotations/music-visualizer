@@ -35,7 +35,7 @@ public class SessionManager {
 	}
 	// TODO: MAKE A REAL GENERATOR
 	private String generateId() {
-		return "1";
+		return this.toString();
 	}
 	private int isPositive(float x) {
 		if(x > 0)
@@ -58,7 +58,7 @@ public class SessionManager {
 	    int currentRoundedY = absoluteStartY;
 	    float xStep = 1;
 	    float yStep = 1;
-	    //unrounded values
+	    // Unrounded values
 	    float currentRawX = (float) absoluteStartX;
 	    float currentRawY = (float) absoluteStartY;
 	    
@@ -77,14 +77,16 @@ public class SessionManager {
 	    	currentRawX += xStep;
 	    	currentRawY += yStep;
 	    }
+	    // What is this while loop doing, Mike?
 	    while(currentRoundedX != absoluteEndX && currentRoundedY != absoluteEndY);
 	    bitmap[absoluteEndX][absoluteEndY] = 2;
 	    bitmap[absoluteStartX][absoluteStartY] = 2;
 	}
-	//for debugging of stage 1
+	// For debugging of stage 1
 	public String printBitMap() {
 	    String map = "";
 	    for(int i=0; i<height; i++) {
+	    	map += i+": ";
 	    	for(int j=0; j<width; j++) {
 	    		if(bitmap[j][i] == 0)
 	    			map += " ";
@@ -94,7 +96,7 @@ public class SessionManager {
 	    			map += "=";
 	    	}
 	    	map += "\n";
-	    } System.out.println("map " + map);
+	    }
 	    return map;
 	}
 }
