@@ -1,6 +1,4 @@
-import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Map;
 import java.util.Queue;
 
 /*
@@ -8,8 +6,6 @@ import java.util.Queue;
  */
 
 public class SessionManager {
-  /* Static variables */
-  private static Map<String, SessionManager> sessionsMap = new HashMap<String, SessionManager>();
   
   private Queue<TouchEvent> queueOfEvents;
 
@@ -23,7 +19,6 @@ public class SessionManager {
     queueOfEvents = new LinkedList<TouchEvent>();
     bitmap = new int[width][height];
     sessionId = generateId();
-    sessionsMap.put(sessionId, this);
     initBitmap();
   }
   
@@ -33,10 +28,6 @@ public class SessionManager {
   }
   public String getSessionId() {
     return sessionId;
-  }
-
-  public static SessionManager getSession(String sessionId) {
-    return sessionsMap.get(sessionId);
   }
 
   private void initBitmap() {

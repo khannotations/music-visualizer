@@ -3,9 +3,10 @@
 //to compile: javac -cp json-simple-1.1.1.jar *.java
 //to run: java -cp '.:json-simple-1.1.1.jar' Server
 
-import java.io.*;
-import java.util.*;
-import java.net.*;
+import java.net.ServerSocket;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Server {
   public final static int THREAD_COUNT = 3;
@@ -20,9 +21,10 @@ public class Server {
       System.out.println("Server at" + welcomeSocket);
       // create thread pool
       threads = new ServiceThread[THREAD_COUNT];
+      Map sessionsMap = Collections.synchronizedMap(new HashMap());
       // start all threads
       for (int i = 0; i < threads.length; i++) {
-    		threads[i] = new ServiceThread(welcomeSocket, updateTable);
+    		threads[i] = new ServiceThread(welcomeSocket, updateTable, sessionsMap);
     		threads[i].start();
       }
   	} catch (Exception e) {

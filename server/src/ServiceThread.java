@@ -16,11 +16,13 @@ public class ServiceThread extends Thread {
   private Map<String, String> updateTable;
   private BufferedReader inFromClient;
   private DataOutputStream outToClient;
+  private Map sessionMap;
   private SessionManager mySession;
   public ServiceThread(ServerSocket welcomeSocket, 
-    Map<String, String> updateTable) {
+    Map<String, String> updateTable, Map sessionMap) {
 
     this.welcomeSocket = welcomeSocket;
+    this.sessionMap = sessionMap;
   }
   public void run() {
     System.out.println("Thread " + this + " started.");
@@ -65,6 +67,7 @@ public class ServiceThread extends Thread {
 	    String action = path[0];
       if(action.equals("/new")) {
         mySession = new SessionManager();
+        sessionMap.put(mySession.getSessionId(), mySession);
       } else if (action.equals("/join")) {
         mySession.joinSession(map.get("sessionCode"));
       } else if (action.equals("/touch")) {
@@ -72,7 +75,8 @@ public class ServiceThread extends Thread {
           float startY = Float.parseFloat(map.get("startY"));
           float endX = Float.parseFloat(map.get("endX"));
           float endY = Float.parseFloat(map.get("endY"));
-          System.out.println(mySession.getSessionId());
+          String sessionId = map.get("sessionId");
+          mySession = (SessionManager) sessionMap.get(sessionId);
           mySession.updateBitMap(startX, startY, endX, endY);
           System.out.println("hi");
       } else {
