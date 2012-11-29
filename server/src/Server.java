@@ -1,3 +1,9 @@
+// simple Java server
+
+//to compile: javac -cp json-simple-1.1.1.jar *.java
+//to run: java -cp '.:json-simple-1.1.1.jar' Server
+
+
 import java.io.*;
 import java.util.*;
 import java.net.*;
