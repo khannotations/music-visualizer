@@ -21,7 +21,7 @@ public class Server {
       System.out.println("Server at" + welcomeSocket);
       // create thread pool
       threads = new ServiceThread[THREAD_COUNT];
-      Map sessionsMap = Collections.synchronizedMap(new HashMap());
+      Map sessionsMap = Collections.synchronizedMap(new HashMap<String, SessionManager>());
       // start all threads
       for (int i = 0; i < threads.length; i++) {
     		threads[i] = new ServiceThread(welcomeSocket, updateTable, sessionsMap);

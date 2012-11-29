@@ -23,7 +23,7 @@ public class SessionManager {
   }
   
   // Still to do
-  public boolean joinSession(String sessionId) {
+  public boolean joinSession() {
     return true;
   }
   public String getSessionId() {

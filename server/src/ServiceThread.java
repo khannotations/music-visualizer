@@ -13,19 +13,26 @@ import java.util.Map;
 
 public class ServiceThread extends Thread {
   private ServerSocket welcomeSocket;
-  private Map<String, String> updateTable;
+  // private Map<String, String> updateTable;
   private BufferedReader inFromClient;
   private DataOutputStream outToClient;
-  private Map sessionMap;
+  private Map<String, SessionManager> sessionMap;
   private SessionManager mySession;
   public ServiceThread(ServerSocket welcomeSocket, 
-    Map<String, String> updateTable, Map sessionMap) {
+    Map<String, String> updateTable, Map<String, SessionManager> sessionMap) {
 
     this.welcomeSocket = welcomeSocket;
     this.sessionMap = sessionMap;
   }
   public void run() {
     System.out.println("Thread " + this + " started.");
+    if(sessionMap.isEmpty()) {
+    	System.out.println("No current sessions.");
+    } else {
+    	for(String key : sessionMap.keySet()) {
+    		System.out.println("Starting session with ID "+key);
+    	}
+    }
   	while (true) {
 	    // get a new request connection
 	    Socket s = null;
@@ -34,7 +41,7 @@ public class ServiceThread extends Thread {
     		    s = welcomeSocket.accept();
     		    System.out.println("Thread "+this+" process request "+s);
     		} catch (IOException e) {
-    		}
+    	}
       } // end of extract a request
       processRequest(s);
   	} // end while
@@ -45,6 +52,7 @@ public class ServiceThread extends Thread {
 	    inFromClient = new BufferedReader(new InputStreamReader(connSock.getInputStream()));
 	    outToClient = new DataOutputStream(connSock.getOutputStream());
 	    String query = inFromClient.readLine();
+	    System.out.println("Query: " + query);
       String[] request = query.split("\\s");
 	    if (request.length < 2 || !request[0].equals("GET")) {
 		    outputError(500, "Bad request");
@@ -54,6 +62,7 @@ public class ServiceThread extends Thread {
 	    //path
 	    String[] path = request[1].split("\\?");      
       //http parameters
+	    System.out.println(path);
 	    String[] params = path[1].split("&");
 	    Map<String, String> map = new HashMap<String, String>();
 	    for (String param : params) {
@@ -68,25 +77,31 @@ public class ServiceThread extends Thread {
       if(action.equals("/new")) {
         mySession = new SessionManager();
         sessionMap.put(mySession.getSessionId(), mySession);
+        System.out.println("New session " + mySession.getSessionId() +" created!");
       } else if (action.equals("/join")) {
-        mySession.joinSession(map.get("sessionCode"));
+    	mySession = sessionMap.get(map.get("id"));
+        mySession.joinSession();
       } else if (action.equals("/touch")) {
           float startX = Float.parseFloat(map.get("startX"));
           float startY = Float.parseFloat(map.get("startY"));
           float endX = Float.parseFloat(map.get("endX"));
           float endY = Float.parseFloat(map.get("endY"));
+          String sessionCode = map.get("id");
+          mySession = sessionMap.get(sessionCode);
           mySession.updateBitMap(startX, startY, endX, endY);
+          System.out.println("Updated session "+ sessionCode + "!");
       } else {
         outputError(500, "Bad request");
         connSock.close();
         return;
       }
-	    outputResponseHeader();
-	    //outputResponseBody(mySession.getSessionId());
+	  outputResponseHeader();
+	  //outputResponseBody(mySession.getSessionId());
       //outputResponseBody(action);
       outputResponseBody(mySession.printBitMap());
-	    connSock.close();
+	  connSock.close();
     } catch (Exception e) {
+    	e.printStackTrace();
     }
   } // end of serveARequest
   private void outputResponseHeader() throws Exception {
@@ -102,6 +117,7 @@ public class ServiceThread extends Thread {
   	    outToClient.writeBytes("HTTP/1.0 " + errCode + " " + errMsg
   				   + "\r\n");
   	} catch (Exception e) {
+  		e.printStackTrace();
   	}
   }
 } // end ServiceThread
