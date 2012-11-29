@@ -63,14 +63,22 @@ public class ServiceThread extends Thread {
       } else if (action.equals("/join")) {
         mySession.joinSession(map.get("sessionCode"));
       } else if (action.equals("/touch")) {
-          //TODO
+          float startX = Float.parseFloat(map.get("startX"));
+          float startY = Float.parseFloat(map.get("startY"));
+          float endX = Float.parseFloat(map.get("endX"));
+          float endY = Float.parseFloat(map.get("endY"));
+          System.out.println(mySession.getSessionId());
+          mySession.updateBitMap(startX, startY, endX, endY);
+          System.out.println("hi");
       } else {
         outputError(500, "Bad request");
         connSock.close();
         return;
       }
 	    outputResponseHeader();
-	    outputResponseBody(mySession.getSessionId());
+	    //outputResponseBody(mySession.getSessionId());
+      outputResponseBody(action);
+      //outputResponseBody(mySession.printBitMap());
 	    connSock.close();
     } catch (Exception e) {
     }
