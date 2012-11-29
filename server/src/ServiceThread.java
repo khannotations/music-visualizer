@@ -78,7 +78,7 @@ public class ServiceThread extends Thread {
 	    outputResponseHeader();
 	    //outputResponseBody(mySession.getSessionId());
       outputResponseBody(action);
-      //outputResponseBody(mySession.printBitMap());
+      outputResponseBody(mySession.printBitMap());
 	    connSock.close();
     } catch (Exception e) {
     }

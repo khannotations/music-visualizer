@@ -9,7 +9,7 @@ import java.util.*;
 import java.net.*;
 
 public class Server {
-  public final static int THREAD_COUNT = 3;
+  public final static int THREAD_COUNT = 1;
   private ServerSocket welcomeSocket;
   private ServiceThread[] threads;
   private Map<String, String> updateTable;

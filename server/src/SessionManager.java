@@ -57,7 +57,7 @@ public class SessionManager {
     float deltaX = startX - endX;
     float deltaY = startY - endY;
     
-    /*int absoluteStartX = (int) (startX * width);
+    int absoluteStartX = (int) (startX * width);
     int absoluteStartY = (int) (startY * height);
     int absoluteEndX = (int) (endX * width);
     int absoluteEndY = (int) (endY * height);
@@ -86,7 +86,7 @@ public class SessionManager {
       currentRoundedY = (int) Math.round(currentRawY);
     }
     while(currentRoundedX != absoluteEndX && currentRoundedY != absoluteEndY);
-    bitmap[absoluteEndX][absoluteEndY] = 1;*/
+    bitmap[absoluteEndX][absoluteEndY] = 1;
   }
   
   //for debugging of stage 1
