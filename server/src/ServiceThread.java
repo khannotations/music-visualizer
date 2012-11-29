@@ -75,10 +75,7 @@ public class ServiceThread extends Thread {
           float startY = Float.parseFloat(map.get("startY"));
           float endX = Float.parseFloat(map.get("endX"));
           float endY = Float.parseFloat(map.get("endY"));
-          String sessionId = map.get("sessionId");
-          mySession = (SessionManager) sessionMap.get(sessionId);
           mySession.updateBitMap(startX, startY, endX, endY);
-          System.out.println("hi");
       } else {
         outputError(500, "Bad request");
         connSock.close();
@@ -86,8 +83,8 @@ public class ServiceThread extends Thread {
       }
 	    outputResponseHeader();
 	    //outputResponseBody(mySession.getSessionId());
-      outputResponseBody(action);
-      //outputResponseBody(mySession.printBitMap());
+      //outputResponseBody(action);
+      outputResponseBody(mySession.printBitMap());
 	    connSock.close();
     } catch (Exception e) {
     }

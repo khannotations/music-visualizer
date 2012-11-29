@@ -11,8 +11,8 @@ public class SessionManager {
 
   private int[][] bitmap;
   // TODO: NOT RIGHT HEIGHT OR WIDTH DUH
-  private final int height = 900;
-  private final int width = 1600;
+  private final int height = 100;
+  private final int width = 100;
   private String sessionId;
 
   public SessionManager() {
@@ -43,13 +43,21 @@ public class SessionManager {
     return "1";
   }
   
+  
+  private int isPositive(float x) {
+    if(x > 0)
+      return 1;
+    else if (x < 0)
+      return -1;
+    else
+      return 0;
+  }
   //for stage 1, a function to draw the lines
   public void updateBitMap(float startX, float startY, float endX, float endY) {
-    System.out.println("YO");
     float deltaX = startX - endX;
     float deltaY = startY - endY;
     
-    /*int absoluteStartX = (int) (startX * width);
+    int absoluteStartX = (int) (startX * width);
     int absoluteStartY = (int) (startY * height);
     int absoluteEndX = (int) (endX * width);
     int absoluteEndY = (int) (endY * height);
@@ -62,34 +70,37 @@ public class SessionManager {
     float currentRawX = (float) absoluteStartX;
     float currentRawY = (float) absoluteStartY;
     
-    if(deltaX > deltaY) {
-      xStep = deltaX /deltaY;
-      yStep = 1 * Math.abs(deltaY);      
+    if(Math.abs(deltaX) > Math.abs(deltaY)) {
+      xStep = deltaX /Math.abs(deltaY) * -1;
+      yStep = -1 * isPositive(deltaY);      
     } else {
-      yStep = deltaY /deltaX;
-      xStep = 1 * Math.abs(deltaX); 
-    }
+      yStep = deltaY /Math.abs(deltaX) * -1;
+      xStep = -1 * isPositive(deltaX);
+    } 
     
     do {
+      currentRoundedX = (int) Math.round(currentRawX);
+      currentRoundedY = (int) Math.round(currentRawY);
       bitmap[currentRoundedX][currentRoundedY] = 1;
       currentRawX += xStep;
       currentRawY += yStep;
-      currentRoundedX = (int) Math.round(currentRawX);
-      currentRoundedY = (int) Math.round(currentRawY);
     }
     while(currentRoundedX != absoluteEndX && currentRoundedY != absoluteEndY);
-    bitmap[absoluteEndX][absoluteEndY] = 1;*/
+    bitmap[absoluteEndX][absoluteEndY] = 2;
+    bitmap[absoluteStartX][absoluteStartY] = 2;
   }
   
   //for debugging of stage 1
   public String printBitMap() {
     String map = "";
-    for(int i=0; i<width; i++) {
-      for(int j=0; j<height; j++) {
-        if(bitmap[i][j] == 0)
+    for(int i=0; i<height; i++) {
+      for(int j=0; j<width; j++) {
+        if(bitmap[j][i] == 0)
           map += " ";
+        else if(bitmap[j][i] == 1)
+          map += "+";
         else
-          map += ".";          
+          map += "=";
       }
       map += "\n";
     }
