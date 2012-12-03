@@ -11,7 +11,7 @@ byte[] buffer = new byte[65536];
 PImage video;
 
 void setup() {
-  size(400,300);
+  size(320,240);
   try {
     ds = new DatagramSocket(port);
   } catch (SocketException e) {
@@ -26,8 +26,8 @@ void setup() {
 
   // Draw the image
   background(0);
-  imageMode(CENTER);
-  image(video,width/2,height/2);
+  //imageMode(CENTER);
+  image(video,0,0);
 }
 
 void checkForImage() {
@@ -50,7 +50,8 @@ void checkForImage() {
     // Make a BufferedImage out of the incoming bytes
     BufferedImage img = ImageIO.read(bais);
     // Put the pixels into the video PImage
-    img.getRGB(0, 0, video.width, video.height, video.pixels, 0, video.width);
+    println(img.getWidth() + " h: " + img.getHeight() + " len: " + video.pixels.length);
+    img.getRGB(0, 0, img.getWidth(), img.getHeight(), video.pixels, 0, video.width);
   } catch (Exception e) {
     e.printStackTrace();
   }

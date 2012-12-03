@@ -4,24 +4,27 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/*
- * 
- */
+import processing.core.PApplet;
 
 public class ServiceThread extends Thread {
 	private ServerSocket welcomeSocket;
-	// private Map<String, String> updateTable;
 	private BufferedReader inFromClient;
 	private DataOutputStream outToClient;
-	private Map<String, SessionManager> sessionMap;
 	private SessionManager mySession;
+	
+	/* Static variables */
+	private static Map<String, SessionManager> sessionMap = 
+			Collections.synchronizedMap(new HashMap<String, SessionManager>());
+	private static int nextPort = 10000;
+	
 	public ServiceThread(ServerSocket welcomeSocket, 
-			Map<String, String> updateTable, Map<String, SessionManager> sessionMap) {
+			Map<String, String> updateTable /*, Map<String, SessionManager> sessionMap */ ) {
 		this.welcomeSocket = welcomeSocket;
-		this.sessionMap = sessionMap;
+		// this.sessionMap = sessionMap;
 	}
 	public void run() {
 		System.out.println("Thread " + this + " started.");
@@ -81,21 +84,21 @@ public class ServiceThread extends Thread {
 	    		return;
 		    }
 		    if(action.equals("/new")) {
-		    	mySession = new SessionManager();
-		    	sessionMap.put(mySession.getSessionId(), mySession);
-		    	outputString = "Created new session with ID "+ mySession.getSessionId();
-		    	outputString += ". Total: "+sessionMap.size();
+		    	String id = generateId();
+		    	mySession = new SessionManager(id);
+		    	sessionMap.put(id, mySession);
+		    	outputString = id;
+		    	initializeProcessing(id);
 		    } else if (action.equals("/join")) {
 		    	mySession.joinSession();
-		    } else if (action.equals("/touch")) {
+		    } /* else if (action.equals("/touch")) {
 		    	float startX = Float.parseFloat(map.get("startX"));
 		    	float startY = Float.parseFloat(map.get("startY"));
 		    	float endX = Float.parseFloat(map.get("endX"));
 		    	float endY = Float.parseFloat(map.get("endY"));
-		    	mySession.updateBitMap(startX, startY, endX, endY);
-		    	outputString = "BitMap for "+mySession.getSessionId()+" updated. Scroll down to see it.\n";
-		    	outputString += mySession.printBitMap();
-		    } else {
+		    	//mySession.updateBitMap(startX, startY, endX, endY);
+		    	outputString = "BitMap for "+mySession.getId()+" updated.";
+		    } */ else {
 		    	outputError(404, "No such path.");
 		    	connSock.close();
 		    	return;
@@ -107,6 +110,14 @@ public class ServiceThread extends Thread {
 			e.printStackTrace();
 		}
 	}
+	private static String generateId() {
+		nextPort++;
+		return nextPort + "";
+	}
+	private void initializeProcessing(String id) {
+		PApplet.main(new String[] { "--present", "VideoSender" });
+	}
+
 	private void outputResponseHeader() throws Exception {
 		outToClient.writeBytes("HTTP/1.0 200 Document Follows\r\n");
 	}
