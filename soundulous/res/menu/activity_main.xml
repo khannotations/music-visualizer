@@ -1,4 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/test_button"
+        android:title="test button"
+        android:orderInCategory="97"
+        android:showAsAction="ifRoom|withText" />
     <item android:id="@+id/start_session"
         android:title="@string/start_session"
         android:orderInCategory="98"
