@@ -6,5 +6,5 @@
         android:summary="Enter the URL of the server"
         android:dialogTitle="Server Address"
         android:dialogMessage="Enter the URL of the server"    
-        android:defaultValue="http://monkey.zoo.cs.yale.edu" />
+        android:defaultValue="monkey.zoo.cs.yale.edu" />
 </PreferenceScreen>

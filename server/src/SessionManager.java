@@ -1,29 +1,25 @@
-import java.util.LinkedList;
-import java.util.Queue;
 
 /*
  * 
  */
 
 public class SessionManager {
-	private Queue<TouchEvent> queueOfEvents;
 	private int[][] bitmap;
 	// TODO: NOT RIGHT HEIGHT OR WIDTH DUH
 	private final int height = 90;
 	private final int width = 160;
 	private String sessionId;
 	
-	public SessionManager() {
-		queueOfEvents = new LinkedList<TouchEvent>();
+	public SessionManager(String id) {
 	    bitmap = new int[width][height];
-	    sessionId = generateId();
+	    sessionId = id;
 	    initBitmap();
 	}
 	// Still to do
 	public boolean joinSession() {
 		return true;
 	}
-	public String getSessionId() {
+	public String getId() {
 		return sessionId;
 	}
 	private void initBitmap() {
@@ -32,10 +28,6 @@ public class SessionManager {
 				bitmap[i][j] = 0;
 			}
 		}
-	}
-	// TODO: MAKE A REAL GENERATOR
-	private String generateId() {
-		return this.toString();
 	}
 	private int isPositive(float x) {
 		if(x > 0)
