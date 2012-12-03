@@ -1,17 +1,18 @@
 package us.soundulo.soundulous;
 
 import android.os.Bundle;
-import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.FrameLayout;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity{
 	
-	private Handler handler;
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -19,6 +20,15 @@ public class MainActivity extends Activity {
         FrameLayout frame = (FrameLayout) findViewById(R.id.touchable_holder);  
         TouchableView touchable = new TouchableView(this);
         frame.addView(touchable);
+    }
+    
+    protected void onResume() {
+    	super.onResume();
+    }
+    
+    protected void onPause() {
+        super.onPause();
+    	//sharedPref.unregisterOnSharedPreferenceChangeListener(listener);
     }
 
     @Override
@@ -29,9 +39,10 @@ public class MainActivity extends Activity {
     
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle item selection
+        // Handle menu item selection
         switch (item.getItemId()) {
         	case R.id.start_session:
+        		new Thread(new StartSessionRunnable()).start();
         		return true;
         	case R.id.join_session:
         		return true;
@@ -44,5 +55,12 @@ public class MainActivity extends Activity {
                 return super.onOptionsItemSelected(item);
         }
     }
-    
+
+    private class StartSessionRunnable implements Runnable {
+    	public void run() {
+    		String url = PreferenceManager.getDefaultSharedPreferences(getBaseContext()).
+    				getString("server_url", "");
+    		
+    	}
+    }
 }
