@@ -9,6 +9,7 @@ int clientPort = 9100;
 DatagramSocket ds; 
 // Capture object
 Capture cam;
+PImage img;
 
 void setup() {
   size(320,240);
@@ -19,7 +20,7 @@ void setup() {
     e.printStackTrace();
   }
   // Initialize Camera
-  cam = new Capture( this, width,height,30);
+  // cam = new Capture( this, width,height,30);
 }
 
 void captureEvent( Capture c ) {
@@ -29,7 +30,15 @@ void captureEvent( Capture c ) {
 }
 
 void draw() {
-  image(cam,0,0);
+  if(frameCount < 120) {
+    img = loadImage("me.jpg");
+  }
+  else {
+    img = loadImage("avatar.jpg");
+  }
+  image(img,0,0);
+  broadcast(img);
+  
 }
 
 
@@ -37,7 +46,6 @@ void draw() {
 // Special thanks to: http://ubaa.net/shared/processing/udp/
 // (This example doesn't use the library, but you can!)
 void broadcast(PImage img) {
-
   // We need a buffered image to do the JPG encoding
   BufferedImage bimg = new BufferedImage( img.width,img.height, BufferedImage.TYPE_INT_RGB );
 
