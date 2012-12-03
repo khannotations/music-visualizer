@@ -115,7 +115,11 @@ public class ServiceThread extends Thread {
 		return nextPort + "";
 	}
 	private void initializeProcessing(String id) {
-		PApplet.main(new String[] { "--present", "VideoSender" });
+		// PApplet.main(new String[] { "--present", "VideoSender" });
+		VideoSender vs = new VideoSender("10002");
+		String[] params = new String[1];
+		params[0] = "VideoSender";
+		PApplet.runSketch(params, vs);
 	}
 
 	private void outputResponseHeader() throws Exception {

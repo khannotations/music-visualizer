@@ -20,13 +20,18 @@ import processing.core.PImage;
 public class VideoSender extends PApplet{
 	private final int cWidth = 320;
 	private final int cHeight = 240;
-	//private Server myServer;			// For broadcasting events
+	private int port;
+	//private Server myServer;			// For receiving touch events
 	//private Client myClient;
 	int dataIn;
 	int val = 0;
-	int port = 10001;
 	PGraphics img;
 	DatagramSocket ds;
+	
+	public VideoSender(String id) {
+		port = Integer.parseInt(id);
+		System.out.println("New videosender on port "+port);
+	}
 	
 	public void setup() {
 		size(cWidth, cHeight);
@@ -36,7 +41,7 @@ public class VideoSender extends PApplet{
 		} catch (SocketException e) {
 		    e.printStackTrace();
 		}
-        // context.save("test.jpg");
+        // img.save("test.jpg");
 	}
 	public void draw() {
 		img.beginDraw();
