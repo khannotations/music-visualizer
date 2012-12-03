@@ -4,27 +4,25 @@
 //to run: java -cp '.:json-simple-1.1.1.jar' Server
 
 import java.net.ServerSocket;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
-public class Server {
+public class MyServer {
 	public final static int THREAD_COUNT = 2;
 	private ServerSocket welcomeSocket;
 	private ServiceThread[] threads;
 	private Map<String, String> updateTable;
+	
 	/* Constructor: First Run of the server*/
-	public Server(int serverPort) {
+	public MyServer(int serverPort) {
 		try {
 			// create server socket
 			welcomeSocket = new ServerSocket(serverPort);
 			System.out.println("Server at" + welcomeSocket);
 			// create thread pool
 			threads = new ServiceThread[THREAD_COUNT];
-			Map sessionsMap = Collections.synchronizedMap(new HashMap<String, SessionManager>());
 			// start all threads
 			for (int i = 0; i < threads.length; i++) {
-    		threads[i] = new ServiceThread(welcomeSocket, updateTable, sessionsMap);
+    		threads[i] = new ServiceThread(welcomeSocket, updateTable);
     		threads[i].start();
 			}
 		} catch (Exception e) {
@@ -36,7 +34,7 @@ public class Server {
 	    int serverPort = 6789;
 	    if (args.length >= 1)
 	    	serverPort = Integer.parseInt(args[0]);
-	    Server server = new Server(serverPort);
+	    MyServer server = new MyServer(serverPort);
 	    server.run();
 	}
 	// Infinite loop to process each connection
