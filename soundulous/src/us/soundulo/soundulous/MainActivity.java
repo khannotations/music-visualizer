@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 
 public class MainActivity extends Activity{
 	
-	public int port = -1; // holds current port; -1 if not connected
+	private int port = -1; // holds current port; -1 if not connected
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {

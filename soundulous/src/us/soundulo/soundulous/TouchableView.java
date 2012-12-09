@@ -16,7 +16,7 @@ public class TouchableView extends View {
 		}
 	}
 
-	
+	private int port = -1;
 	private GestureDetector gestures;
 	
 	public TouchableView(Context context) {
@@ -27,5 +27,14 @@ public class TouchableView extends View {
 	
 	public boolean onTouchEvent(MotionEvent event) {
 	    return gestures.onTouchEvent(event);
+	}
+	
+	public int getPort() {
+		return port;
+	}
+	
+	public int setPort(int newPort) {
+		port = newPort;
+		return port;
 	}
 }
