@@ -16,13 +16,14 @@ import android.widget.FrameLayout;
 public class MainActivity extends Activity{
 	
 	private int port = -1; // holds current port; -1 if not connected
+	private TouchableView touchable;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);    
         FrameLayout frame = (FrameLayout) findViewById(R.id.touchable_holder);  
-        TouchableView touchable = new TouchableView(this);
+        touchable = new TouchableView(this);
         frame.addView(touchable);
     }
     
@@ -81,7 +82,9 @@ public class MainActivity extends Activity{
     			}
     			httpconn.disconnect();
     			port = Integer.parseInt(response.toString());
-    			
+    			if (touchable.getPort() != port) {
+    				touchable.setPort(port);
+    			}
     		}
     		catch (Exception e) {
 				System.out.println("Exception:" + e.getMessage());
