@@ -10,15 +10,19 @@ DatagramSocket ds;
 // Capture object
 Capture cam;
 PImage img;
+int exitFrame;
 
 void setup() {
   size(320,240);
+  frameRate(48);
+  exitFrame = (int) (10*frameRate);
   // Setting up the DatagramSocket, requires try/catch
   try {
     ds = new DatagramSocket();
   } catch (SocketException e) {
     e.printStackTrace();
   }
+  
   // Initialize Camera
   // cam = new Capture( this, width,height,30);
 }

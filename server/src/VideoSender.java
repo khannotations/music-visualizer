@@ -16,13 +16,17 @@ import javax.imageio.ImageIO;
 import processing.core.PApplet;
 import processing.core.PGraphics;
 import processing.core.PImage;
+import processing.net.Client;
+import processing.net.Server;
+//import processing.video.MovieMaker;
 
 public class VideoSender extends PApplet{
 	private final int cWidth = 320;
 	private final int cHeight = 240;
-	private int port;
-	//private Server myServer;			// For receiving touch events
-	//private Client myClient;
+	private int port, exitFrame;
+	private Server myServer;			// For receiving touch events
+	private Client myClient;
+	// private MovieMaker mm;
 	int dataIn;
 	int val = 0;
 	PGraphics img;
@@ -35,12 +39,15 @@ public class VideoSender extends PApplet{
 	
 	public void setup() {
 		size(cWidth, cHeight);
-		img = createGraphics(cWidth, cHeight);
+		img = createGraphics(width, height);
+		frameRate(48);
+		exitFrame = (int) (10*frameRate);
 		try {
 		    ds = new DatagramSocket();
 		} catch (SocketException e) {
 		    e.printStackTrace();
 		}
+		// mm = new MovieMaker(this, width, height, "first.mov", MovieMaker.JPEG, MovieMaker.HIGH, 30);
         // img.save("test.jpg");
 	}
 	public void draw() {
@@ -49,6 +56,7 @@ public class VideoSender extends PApplet{
         img.endDraw();
         image(img,0,0);
 		broadcast(img);
+		saveFrame("output/"+port+"-####.png");
 	}
 
 	// Function to broadcast a PImage over UDP
