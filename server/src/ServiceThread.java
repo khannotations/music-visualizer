@@ -116,7 +116,7 @@ public class ServiceThread extends Thread {
 	}
 	private void initializeProcessing(String id) {
 		// PApplet.main(new String[] { "--present", "VideoSender" });
-		VideoSender vs = new VideoSender("10002");
+		VideoSender vs = new VideoSender(id);
 		String[] params = new String[1];
 		params[0] = "VideoSender";
 		PApplet.runSketch(params, vs);
