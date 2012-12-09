@@ -70,7 +70,7 @@ void broadcast(PImage img) {
   byte[] packet = baStream.toByteArray();
 
   // Send JPEG data as a datagram
-  println("Sending datagram with " + packet.length + " bytes");
+  // println("Sending datagram with " + packet.length + " bytes");
   try {
     ds.send(new DatagramPacket(packet,packet.length, InetAddress.getByName("localhost"),clientPort));
   } 
