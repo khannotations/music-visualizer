@@ -1,4 +1,5 @@
 
+
 class RadarRenderer extends AudioRenderer {
   
   float aura = .3;
@@ -14,6 +15,9 @@ class RadarRenderer extends AudioRenderer {
   int Kcount, snareCount;
   float r3;
   FFT fft;
+  MovingThreshold thrsh;
+  float threshold;
+  
   
   
   RadarRenderer(AudioSource source) {
@@ -27,21 +31,33 @@ class RadarRenderer extends AudioRenderer {
     currentR = 35;
     currentB = 185;
     currentG = 255;
+    thrsh = new MovingThreshold();
+    threshold=.2;
     in = minim.getLineIn();
     bd = new BeatDetect();
     Kcount = 0;
     snareCount = 0;
     //bl = new BeatListener(beat, in);
-    fft = new FFT(in.bufferSize(), in.sampleRate());  
+    fft = new FFT(in.bufferSize(), in.sampleRate());
+
   }
-  
-  private void setAura(float newAura) {
-    aura = newAura;
-  }
+ 
   
   synchronized void draw()
   {
     bd.detect(in.mix);
+    fft.forward(in.mix);
+    int maxF=0;
+    float maxval=0.0;
+    for(int i=0; i<25600; i++) {
+      float value = fft.getBand(i);
+      if(maxval < value) {
+        maxF = i;
+        maxval = value;
+      }
+    } 
+    //println(maxF + " " + maxval);
+    
     colorMode(RGB, 255, 255, 255);
     if(left != null && frameCount < 5000) {
    
@@ -63,19 +79,25 @@ class RadarRenderer extends AudioRenderer {
       
       if(bd.isKick()) {
         //currentG = (currentG + 92)%255;
-        println("kick");
+        //println("kick");
       } 
-      if(bd.isHat()) println("onset" + snareCount++);
+      //if(bd.isHat())println("onset" + snareCount++);
+      
+      if(frameCount%45 == 0)
+        threshold=thrsh.getThresh();
       
       for(int i=0; i <= n; i++)
       {
         float multiplier = 1;
-         if(abs(r2) > 0.25 || abs(r3) >.2) {
+         if(abs(r2) > threshold || abs(r3) > threshold) {
           multiplier += max(r2, r3)*100;
-           println(r2 + " " + r3);
-          //println(frameCount);
-          //currentG = (currentG + 92)%255;
         }
+        if(abs(r2) > 2*threshold || abs(r3) >2*threshold) {   
+          currentG = random(255);
+          currentR = random(255);
+          currentB = random(255);
+       }
+       thrsh.addValue(abs(r2));
         
         r1 = r2; a1 = a2; x1 = x2; y1 = y2;
         r2 = left[i % n] ;
@@ -102,3 +124,38 @@ class RadarRenderer extends AudioRenderer {
   }
 }
 
+
+class MovingThreshold {
+  public static final int Length = 1024;
+  float list[];
+  int currentIndex;
+  
+  public MovingThreshold() {
+    list = new float[Length];
+    currentIndex=0;
+  }
+  
+  private float calculateAverage() {
+    float sum=0;
+    for(int i=0; i<list.length; i++) {
+      sum+=list[i];
+    }
+    return sum/list.length;
+  }
+  
+  public float getThresh() {
+    float doubleAverage = 2*calculateAverage();
+    println(doubleAverage);
+    if(doubleAverage<.2)
+     return .2;
+    else if (doubleAverage>.55)
+     return .55;
+    return doubleAverage;
+  }
+  
+  public void addValue(float value) {
+    if(++currentIndex==Length-1)
+      currentIndex=0;
+    list[currentIndex] = value; 
+  }
+}
