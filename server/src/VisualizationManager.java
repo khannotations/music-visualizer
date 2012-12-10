@@ -28,6 +28,7 @@ public class VisualizationManager extends PApplet {
 	private AudioPlayer song;		// The song
 	private int port, exitFrame;	// Port on which the server listens
 	private Server server;			// For receiving touch events
+	private PGraphics img;
 	
 	byte[] buffer;					// Buffer into which to read client data
 	
@@ -46,30 +47,43 @@ public class VisualizationManager extends PApplet {
 		song = minim.loadFile("paris.mp3", 1024);
 		song.play();
 		
+		img = createGraphics(width, height);
 		well = new WellRenderer(song);
 		song.addListener(well);
+		well.setImg(img);
 		well.setup();
 
 		server = new Server(this, port);
 		buffer = new byte[16];
-		
 	}
 	public void draw() {
 		well.draw();
+		// img.beginDraw();
+		// img.background(frameCount%255, 0, 0);
+		// img.endDraw();
 		Client client = server.available();
 		if(client != null) {
 			// Launch new thread to read bytes and process here
 			client.readBytes(buffer);
 		}
 		// Launch new thread to do the broadcasting here
-        broadcast(well.img);
-		image(well.img,0,0);
+		img = well.getImg();
+        broadcast(img);
+		image(img,0,0);
+		well.setG(get());
+	}
+	
+	public void stop() {
+		song.close();
+		minim.stop();
+		super.stop();
 	}
 
 	// Function to broadcast a PImage over the Server (UDP probably)
 	// Special thanks to: http://ubaa.net/shared/processing/udp/
 	// (This example doesn't use the library, but you can!)
 	void broadcast(PImage img) {
+		if(img == null) println("IMG IS NULL IN BROADCAST");
 		BufferedImage bimg = new BufferedImage( img.width,img.height, BufferedImage.TYPE_INT_RGB );
 		// Transfer pixels from localFrame to the BufferedImage
 		img.loadPixels();

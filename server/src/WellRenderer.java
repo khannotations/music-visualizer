@@ -1,40 +1,39 @@
 import processing.core.PGraphics;
+import processing.core.PImage;
 import ddf.minim.AudioInput;
 import ddf.minim.AudioSource;
-import ddf.minim.Minim;
 import ddf.minim.analysis.FFT;
 
 public class WellRenderer extends AudioRenderer {
 	
-	Minim minim;
 	AudioInput in;
 	FFT fft;
 	public PGraphics img;
+	private PImage g;
 	double aura = 0.3, orbit = 0.35;
 	int delay = 2;
 	float red, green, blue, r3, rotations, width, height;
 	
 	public WellRenderer(AudioSource source/*, int[] dims*/) {
 		rotations =  (int) source.sampleRate() / source.bufferSize();
+		fft = new FFT(source.bufferSize(), source.sampleRate());  
 		// width = dims[0];
 		// height = dims[1];
 	}
 	
-	@Override
 	public void setup() {
-		img = createGraphics(320, 240);
+		if(img == null) {
+			println("IMG IS NULL");
+		}
 		img.beginDraw();
 		img.colorMode(RGB, 255, 255, 255);
 	    img.background(0);
 	    img.endDraw();
-	    in = minim.getLineIn();
-	    fft = new FFT(in.bufferSize(), in.sampleRate());  
 	    red = 35;
 	    green = 255;
 	    blue = 185;
 	}
 
-	@Override
 	public void draw() {
 		img.beginDraw();
 	    if(left != null) {
@@ -74,5 +73,16 @@ public class WellRenderer extends AudioRenderer {
 	      img.stroke(255);
 	      img.line(w, height - 20, w, height - 20 + r2*100);
 	    }
+	    img.endDraw();
+	}
+	
+	public void setImg(PGraphics img) {
+		this.img = img;
+	}
+	public PGraphics getImg() {
+		return img;
+	}
+	public void setG(PImage g) {
+		this.g = g;
 	}
 }
