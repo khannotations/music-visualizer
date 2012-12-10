@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.util.Map;
 
 public class MyServer {
-	public final static int THREAD_COUNT = 2;
+	public final static int THREAD_COUNT = 1;
 	private ServerSocket welcomeSocket;
 	private ServiceThread[] threads;
 	private Map<String, String> updateTable;
@@ -26,6 +26,7 @@ public class MyServer {
     		threads[i].start();
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			System.out.println("WBServer construction failed.");
 		}
 	}

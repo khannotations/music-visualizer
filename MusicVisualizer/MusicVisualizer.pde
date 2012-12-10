@@ -14,20 +14,23 @@
 
 
 import ddf.minim.*;
+import codeanticode.gsvideo.*;
+import processing.video.*;
 
 Minim minim;
 
 AudioPlayer groove;
 AudioRenderer radar, vortex, iso, graph;
 AudioRenderer[] visuals; 
-
+GSMovieMaker mm;
+  
 int select;
  
 void setup()
 {
   // setup graphics
   size(320, 240, P3D);
-    
+  frameRate(30);
   // setup player
   minim = new Minim(this);
   groove = minim.loadFile("paris.mp3", 1024);
@@ -46,11 +49,23 @@ void setup()
   select = 0;
   groove.addListener(visuals[select]);
   visuals[select].setup();
+  
+  mm = new GSMovieMaker(this, width, height, "first.mov", GSMovieMaker.THEORA, GSMovieMaker.MEDIUM, 24);
+  mm.setQueueSize(50, 10);
+  mm.start();
 }
  
 void draw()
 {
   visuals[select].draw();
+  loadPixels();
+  mm.addFrame(pixels);
+  //println("Number of queued frames : " + mm.getQueuedFrames());
+  //println("Number of dropped frames: " + mm.getDroppedFrames());
+  if(frameCount >= 500) {
+    mm.finish();
+    exit();
+  }
 }
  
 void keyPressed() {

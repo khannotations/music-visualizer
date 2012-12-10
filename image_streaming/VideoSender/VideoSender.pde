@@ -1,16 +1,18 @@
 import processing.video.*;
+import processing.net.*;
 
 import javax.imageio.*;
 import java.awt.image.*; 
 
 // This is the port we are sending to
-int clientPort = 9100; 
+int clientPort = 1001; 
 // This is our object that sends UDP out
 DatagramSocket ds; 
 // Capture object
 Capture cam;
 PImage img;
 int exitFrame;
+Server server;
 
 void setup() {
   size(320,240);
@@ -22,7 +24,7 @@ void setup() {
   } catch (SocketException e) {
     e.printStackTrace();
   }
-  
+  server = new Server(this, clientPort);
   // Initialize Camera
   // cam = new Capture( this, width,height,30);
 }
@@ -72,14 +74,17 @@ void broadcast(PImage img) {
 
   // Get the byte array, which we will send out via UDP!
   byte[] packet = baStream.toByteArray();
-
+  server.write(packet);
   // Send JPEG data as a datagram
   // println("Sending datagram with " + packet.length + " bytes");
+  
+  /*
   try {
     ds.send(new DatagramPacket(packet,packet.length, InetAddress.getByName("localhost"),clientPort));
   } 
   catch (Exception e) {
     e.printStackTrace();
   }
+  */
 }
 
