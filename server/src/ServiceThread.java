@@ -24,10 +24,11 @@ public class ServiceThread extends Thread {
 	public ServiceThread(ServerSocket welcomeSocket, 
 			Map<String, String> updateTable /*, Map<String, SessionManager> sessionMap */ ) {
 		this.welcomeSocket = welcomeSocket;
+		initializeProcessing("10001");
 		// this.sessionMap = sessionMap;
 	}
 	public void run() {
-		System.out.println("Thread " + this + " started.");
+		System.out.println(this + " started.");
 		if(sessionMap.isEmpty()) {
 			System.out.println("No current sessions.");
 		} else {
@@ -116,10 +117,8 @@ public class ServiceThread extends Thread {
 	}
 	private void initializeProcessing(String id) {
 		// PApplet.main(new String[] { "--present", "VideoSender" });
-		VideoSender vs = new VideoSender("10002");
-		String[] params = new String[1];
-		params[0] = "VideoSender";
-		PApplet.runSketch(params, vs);
+		VisualizationManager vs = new VisualizationManager(id);
+		PApplet.runSketch(new String[]{ "" }, vs);
 	}
 
 	private void outputResponseHeader() throws Exception {
