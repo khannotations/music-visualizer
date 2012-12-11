@@ -26,7 +26,7 @@ int select;
 void setup()
 {
   // setup graphics
-  size(320, 240, P3D);
+  size(640, 480, P3D);
     
   // setup player
   minim = new Minim(this);
@@ -53,13 +53,13 @@ void draw()
   visuals[select].draw();
 }
  
-void keyPressed() {
+/*void keyPressed() {
    groove.removeListener(visuals[select]);
    select++;
    select %= visuals.length;
    groove.addListener(visuals[select]);
    visuals[select].setup();
-}
+}*/
 
 void stop()
 {
