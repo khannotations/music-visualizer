@@ -23,7 +23,9 @@ import javazoom.spi.mpeg.sampled.file.tag.TagParseListener;
 
 public class VisualizationManager extends PApplet {
 	/**
-	 * 
+	 * Visualization Manager exists to launch different flavors of visualizations
+	 * It also handles the broadcasting of the images, launching different threads
+	 * to do so on the specified port. 
 	 */
 	private static final long serialVersionUID = 1L;
 	Minim minim;					// Sound manager
@@ -32,7 +34,6 @@ public class VisualizationManager extends PApplet {
 	private AudioPlayer song;		// The song
 	private int port;				// Port on which the server listens
 	private Server server;			// For receiving touch events
-	// private PGraphics img;
 	
 	byte[] buffer;					// Buffer into which to read client data
 	
@@ -41,6 +42,7 @@ public class VisualizationManager extends PApplet {
 		System.out.println("New VisualizationManager on port "+port);
 	}
 	
+	@Override
 	public void setup() {
 		size(320, 240);				// Standard phone size (landscape)
 		frameRate(30);				// As good as we'll ever need
@@ -50,23 +52,35 @@ public class VisualizationManager extends PApplet {
 		song = minim.loadFile("paris.mp3", 1024);
 		song.play();
 		
-		well = new WellRenderer(song);
+		well = new WellRenderer(this, song);
 		song.addListener(well);
 		well.setup();
 
 		server = new Server(this, port);
 		buffer = new byte[16];
 	}
+	
+	@Override
 	public void draw() {
 		well.draw();
 		Client client = server.available();
 		if(client != null) {
 			// Launch new thread to read bytes and process here
 			client.readBytes(buffer);
+			String input = "<buffer error!>";
+			try {
+				input = new String(buffer, "UTF-8");
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			println("Read from "+client.ip()+": "+input);
 		}
 		// Launch new thread to do the broadcasting here
-        // broadcast(img);
-		// image(img,0,0);
+        broadcast();
+	}
+	
+	public void keyPressed() {
+		well.keyPressed();
 	}
 	
 	public void stop() {
@@ -78,12 +92,11 @@ public class VisualizationManager extends PApplet {
 	// Function to broadcast a PImage over the Server (UDP probably)
 	// Special thanks to: http://ubaa.net/shared/processing/udp/
 	// (This example doesn't use the library, but you can!)
-	void broadcast(PImage img) {
-		if(img == null) println("IMG IS NULL IN BROADCAST");
-		BufferedImage bimg = new BufferedImage( img.width,img.height, BufferedImage.TYPE_INT_RGB );
+	void broadcast() {
+		loadPixels();
+		BufferedImage bimg = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
 		// Transfer pixels from localFrame to the BufferedImage
-		img.loadPixels();
-		bimg.setRGB( 0, 0, img.width, img.height, img.pixels, 0, img.width);
+		bimg.setRGB( 0, 0, width, height, pixels, 0, width);
 		ByteArrayOutputStream baStream	= new ByteArrayOutputStream();
 		BufferedOutputStream bos		= new BufferedOutputStream(baStream);
 		try {
