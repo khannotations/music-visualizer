@@ -14,21 +14,14 @@ public class WellRenderer extends AudioRenderer {
 	int delay = 2;
 	float red, green, blue, r3, rotations, width, height;
 	
-	public WellRenderer(AudioSource source/*, int[] dims*/) {
+	public WellRenderer(AudioSource source) {
 		rotations =  (int) source.sampleRate() / source.bufferSize();
 		fft = new FFT(source.bufferSize(), source.sampleRate());  
-		// width = dims[0];
-		// height = dims[1];
 	}
 	
 	public void setup() {
-		if(img == null) {
-			println("IMG IS NULL");
-		}
-		img.beginDraw();
-		img.colorMode(RGB, 255, 255, 255);
-	    img.background(0);
-	    img.endDraw();
+		colorMode(RGB, 255, 255, 255);
+	    background(0);
 	    red = 35;
 	    green = 255;
 	    blue = 185;
@@ -73,6 +66,8 @@ public class WellRenderer extends AudioRenderer {
 	      img.stroke(255);
 	      img.line(w, height - 20, w, height - 20 + r2*100);
 	    }
+	    else
+	    	println("left is null");
 	    img.endDraw();
 	}
 	

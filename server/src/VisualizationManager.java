@@ -11,7 +11,7 @@ import javax.imageio.ImageIO;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import processing.core.PGraphics;
+// import processing.core.PGraphics;
 import processing.net.Client;
 import processing.net.Server;
 import ddf.minim.AudioPlayer;
@@ -22,13 +22,17 @@ import org.tritonus.share.sampled.file.TAudioFileReader;
 import javazoom.spi.mpeg.sampled.file.tag.TagParseListener;
 
 public class VisualizationManager extends PApplet {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	Minim minim;					// Sound manager
 	MinimServiceProvider js;
-	private AudioRenderer well;		// The  renderers
+	private AudioRenderer well;		// The renderers
 	private AudioPlayer song;		// The song
-	private int port, exitFrame;	// Port on which the server listens
+	private int port;				// Port on which the server listens
 	private Server server;			// For receiving touch events
-	private PGraphics img;
+	// private PGraphics img;
 	
 	byte[] buffer;					// Buffer into which to read client data
 	
@@ -40,17 +44,14 @@ public class VisualizationManager extends PApplet {
 	public void setup() {
 		size(320, 240);				// Standard phone size (landscape)
 		frameRate(30);				// As good as we'll ever need
-		exitFrame = (int) (10*frameRate);
 		
 		js = new JSMinim(this);
 		minim = new Minim(js);
 		song = minim.loadFile("paris.mp3", 1024);
 		song.play();
 		
-		img = createGraphics(width, height);
 		well = new WellRenderer(song);
 		song.addListener(well);
-		well.setImg(img);
 		well.setup();
 
 		server = new Server(this, port);
@@ -58,19 +59,14 @@ public class VisualizationManager extends PApplet {
 	}
 	public void draw() {
 		well.draw();
-		// img.beginDraw();
-		// img.background(frameCount%255, 0, 0);
-		// img.endDraw();
 		Client client = server.available();
 		if(client != null) {
 			// Launch new thread to read bytes and process here
 			client.readBytes(buffer);
 		}
 		// Launch new thread to do the broadcasting here
-		img = well.getImg();
-        broadcast(img);
-		image(img,0,0);
-		well.setG(get());
+        // broadcast(img);
+		// image(img,0,0);
 	}
 	
 	public void stop() {
