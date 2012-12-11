@@ -78,10 +78,11 @@ public class MainActivity extends Activity{
     				while ((strLine = input.readLine()) != null) {
     					response.append(strLine);
     				}
+        			port = Integer.parseInt(response.toString());
     				input.close();
+    				System.out.println("got new port " + port);
     			}
     			httpconn.disconnect();
-    			port = Integer.parseInt(response.toString());
     			if (touchable.getPort() != port) {
     				touchable.setPort(port);
     			}
