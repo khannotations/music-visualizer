@@ -41,6 +41,7 @@ public class VisualizationManager extends PApplet {
 	private int port;				// Port on which the server listens
 	private Server server;			// For receiving touch events
 	BroadcastThread thread; //thread for the broadcasting
+  UDPServerThread receive;  //thread to receive touch events
 	
 	private ArrayList<SocketAddress> addresses; 
 	private DatagramSocket ds; 
@@ -73,13 +74,20 @@ public class VisualizationManager extends PApplet {
 
 		server = new Server(this, port);
 		buffer = new byte[1024];
-		thread = new BroadcastThread();
+		thread = new BroadcastThread(width, height);
+    receive = new UDPServerThread();
+    try {
+      receive.start();
+      println("Thread finished");
+    } catch(Exception e) {
+      println("error");
+    }
 	}
 	
 	@Override
 	public void draw() {
 		well.draw();
-		receive();
+		//receive();
 		//Client client = server.available();
 		/*
 		if(client != null) {
@@ -98,7 +106,9 @@ public class VisualizationManager extends PApplet {
         //broadcast();
 		if(thread.isAvailable()) {
 			loadPixels();
-			server.write(thread.run(pixels, width, height));
+      thread.updatePixels(pixels);
+      thread.start();
+			server.write(thread.returnByteArray());
 		}
 	}
 	
