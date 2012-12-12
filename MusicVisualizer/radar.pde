@@ -48,7 +48,7 @@ class RadarRenderer extends AudioRenderer {
   
   synchronized void draw()
   {
-    if(left != null) {
+    if(left != null && frameCount < 50000) {
       float t = map(millis(),0, delay * 1000, 0, PI);   
       int n = left.length;
       // center 

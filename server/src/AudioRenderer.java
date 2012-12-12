@@ -1,7 +1,6 @@
 import processing.core.PApplet;
 import ddf.minim.AudioListener;
 
-
 public abstract class AudioRenderer extends PApplet implements AudioListener {
 	/**
 	 * 
@@ -18,7 +17,6 @@ public abstract class AudioRenderer extends PApplet implements AudioListener {
 	public synchronized void samples(float[] sampL, float[] sampR) {
 		left = sampL; right = sampR;
 	}
-	
 	public abstract void setup();
 	public abstract void draw();
 }

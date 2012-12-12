@@ -10,7 +10,7 @@ PImage video;
 ReceiverThread thread;
 
 void setup() {
-  size(320,240);
+  size(400,300);
   video = createImage(320,240,RGB);
   thread = new ReceiverThread(video.width,video.height);
   thread.start();
