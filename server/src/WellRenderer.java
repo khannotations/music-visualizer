@@ -145,6 +145,7 @@ public class WellRenderer extends AudioRenderer {
 			shiftStart = vm.frameCount;
 		}
 	}
+  
 }
 
 class MovingThreshold {

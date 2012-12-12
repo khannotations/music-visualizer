@@ -3,6 +3,14 @@ import java.io.IOException;
 
 class UDPServerThread extends Thread
 {
+  int[][] recentCoords;
+  int currentIndex;
+  
+  public UDPServerThread() {
+    recentCoords = new int[200][2];
+    currentIndex=0;
+  }
+  
   public void run()
   {
     DatagramSocket serverSocket = null;
@@ -23,6 +31,9 @@ class UDPServerThread extends Thread
         e.printStackTrace();
       }
       System.out.println("just received packet");
+      String[] vals = receivePacket.getData().split(":");
+      recentCoords[currentIndex][0] = vals[0];
+      recentCoords[currentIndex++][1] = vals[1];
       String sentence = new String( receivePacket.getData());
       System.out.println("RECEIVED: " + sentence);
       InetAddress IPAddress = receivePacket.getAddress();

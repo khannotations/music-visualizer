@@ -78,7 +78,6 @@ public class VisualizationManager extends PApplet {
     receive = new UDPServerThread();
     try {
       receive.start();
-      println("Thread finished");
     } catch(Exception e) {
       println("error");
     }
