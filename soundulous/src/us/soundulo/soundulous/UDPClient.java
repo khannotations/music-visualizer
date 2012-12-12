@@ -17,7 +17,7 @@ import android.widget.Toast;
 // simple UDP client taken from 
 // http://systembash.com/content/a-simple-java-udp-server-and-udp-client/
 public class UDPClient extends AsyncTask<String, Void, String> {
-	private final static int portNumber = 6789;
+	private final static int portNumber = 6799;
 	private Context context;
 	
 	/*public static void main(String input) throws Exception
@@ -62,7 +62,7 @@ public class UDPClient extends AsyncTask<String, Void, String> {
 	      InetAddress IPAddress = null;
 		try {
 			//IPAddress = InetAddress.getByName("localhost");
-			IPAddress = InetAddress.getByName("10.0.2.2");
+			IPAddress = InetAddress.getByName("perch.zoo.cs.yale.edu");
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
