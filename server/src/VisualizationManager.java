@@ -39,7 +39,7 @@ public class VisualizationManager extends PApplet {
 	private AudioRenderer well;		// The renderers
 	private AudioPlayer song;		// The song
 	private int port;				// Port on which the server listens
-	//private Server server;			// For receiving touch events
+	private Server server;			// For receiving touch events
 	BroadcastThread thread; //thread for the broadcasting
 	
 	private ArrayList<SocketAddress> addresses; 
@@ -71,8 +71,8 @@ public class VisualizationManager extends PApplet {
 		song.addListener(well);
 		well.setup();
 
-		// server = new Server(this, port);
-		buffer = new byte[16];
+		server = new Server(this, port);
+		buffer = new byte[1024];
 		thread = new BroadcastThread();
 	}
 	
@@ -96,10 +96,10 @@ public class VisualizationManager extends PApplet {
 		*/
 		// Launch new thread to do the broadcasting here
         //broadcast();
-    if(thread.isAvailable()) {
-      loadPixels();
-      server.write(thread.run(pixels, width, height));
-    }
+		if(thread.isAvailable()) {
+			loadPixels();
+			server.write(thread.run(pixels, width, height));
+		}
 	}
 	
 	public void keyPressed() {
