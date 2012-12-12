@@ -34,6 +34,7 @@ public class VisualizationManager extends PApplet {
 	private AudioPlayer song;		// The song
 	private int port;				// Port on which the server listens
 	private Server server;			// For receiving touch events
+  BroadcastThread thread; //thread for the broadcasting
 	
 	byte[] buffer;					// Buffer into which to read client data
 	
@@ -58,6 +59,7 @@ public class VisualizationManager extends PApplet {
 
 		server = new Server(this, port);
 		buffer = new byte[16];
+    thread = new BroadcastThread();
 	}
 	
 	@Override
@@ -76,7 +78,11 @@ public class VisualizationManager extends PApplet {
 			println("Read from "+client.ip()+": "+input);
 		}
 		// Launch new thread to do the broadcasting here
-        broadcast();
+        //broadcast();
+    if(thread.isAvailable()) {
+      loadPixels();
+      server.write(thread.run(pixels, width, height));
+    }
 	}
 	
 	public void keyPressed() {

@@ -20,19 +20,17 @@ Minim minim;
 AudioPlayer groove;
 AudioRenderer radar, vortex, iso, graph;
 AudioRenderer[] visuals; 
-  
+
 int select;
  
 void setup()
 {
   // setup graphics
-  
-  size(320, 240, P3D);
-  frameRate(30);
-  //size(640, 480, P3D);
+  size(640, 480, P3D);
+    
   // setup player
   minim = new Minim(this);
-  groove = minim.loadFile("groove.mp3", 1024);
+  groove = minim.loadFile("paris.mp3", 1024);
   groove.loop();  
 
   // setup renderers
