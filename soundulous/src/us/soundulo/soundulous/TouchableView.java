@@ -38,7 +38,7 @@ public class TouchableView extends View {
 	
 	private void sendCoordinates(float x, float y) {
 		//Toast.makeText(this.getContext(), "x is "+x+", y is "+y, Toast.LENGTH_SHORT).show();
-		new UDPClient(this.getContext()).execute("x:"+x+"y:"+y);
+		new UDPClient(this.getContext()).execute(x+":"+y);
 		//Toast.makeText(this.getContext(), "UDP sent", Toast.LENGTH_SHORT).show();
 	}
 	
