@@ -13,7 +13,6 @@ public class WellRenderer extends AudioRenderer {
 	MovingThreshold thrsh;
 	float touchMultiplier, threshold;
 	int startingFrameForTap, shiftDirection, shiftStart, addToRight, addUp, shakeMagnitude;
-	String event;
 	
 	private VisualizationManager vm;
 	
@@ -114,7 +113,6 @@ public class WellRenderer extends AudioRenderer {
 	      vm.stroke(255);
 	      vm.line(w, height - 20, w, height - 20 + r2*100);
 	    }
-	    event = "";
 	}
 	
 	public void touchEvent(String event) {
@@ -145,10 +143,6 @@ public class WellRenderer extends AudioRenderer {
 			shiftDirection=4;
 			shiftStart = vm.frameCount;
 		}
-	}
-	
-	public void setEvent(String event) {
-		this.event = event;
 	}
 }
 
