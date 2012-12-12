@@ -26,3 +26,7 @@ soundulous/local.properties
 soundulous/.classpath
 soundulous/.settings
 soundulous/.project
+
+# Output
+server/src/output/*
+GSVideo*

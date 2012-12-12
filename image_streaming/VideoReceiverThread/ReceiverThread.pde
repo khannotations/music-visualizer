@@ -6,7 +6,7 @@
 class ReceiverThread extends Thread {
 
   // Port we are receiving.
-  int port = 9100; 
+  int port = 10001; 
   DatagramSocket ds; 
   // A byte array to read into (max size of 65536, could be smaller)
   byte[] buffer = new byte[65536]; 
