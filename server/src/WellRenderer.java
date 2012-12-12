@@ -12,9 +12,10 @@ public class WellRenderer extends AudioRenderer {
 	
 	MovingThreshold thrsh;
 	float touchMultiplier, threshold;
-	int startingFrameForTap, shiftDirection, shiftStart, addToRight, addUp, shakeMagnitude;
+	int startingFrameForTap, shiftDirection, shiftStart, addToRight, addUp, shakeMagnitude, currentIndex;
   
-  float prevX, prevY;
+  float[] prevX; float[] prevY;
+  float prevX1, prevY1;
 
 	
 	private VisualizationManager vm;
@@ -34,7 +35,8 @@ public class WellRenderer extends AudioRenderer {
 	    red = 35;
 	    green = 255;
 	    blue = 185;
-      prevX = prevY = -1;
+      currentIndex=0;
+      prevX = new float[3]; prevY = new float[3];
 	    // Lots of potential for changing visualization with this!!
 	    imgOffset = -1;			// Must be negative
 	    
@@ -123,25 +125,51 @@ public class WellRenderer extends AudioRenderer {
 	public void touchEvent(String touchEvent) {
     if(touchEvent != null) {
       String[] event = touchEvent.split(":");
-      int sensitivity = 5;
+      int sensitivity = 4;
       
       float x = Float.parseFloat(event[0]);
       float y = Float.parseFloat(event[1]);
-      if(prevX == -1)
-        prevX = x;
-      if(prevY == -1)
-        prevY = y;
       String horiz = "tap";
       String vert = "tap";
       
-      if(x - prevX > sensitivity)
-        horiz = "right";
-      else if (x - prevX < -1 * sensitivity)
-        horiz = "left";
-      if(y - prevY > sensitivity)
-        vert = "down";
-      else if(y - prevY < -1 * sensitivity)
-        vert = "up";
+      println(prevX1 + " " + prevY1);
+      if(prevX1==x && prevY1==y) {
+        //register gesture
+        float xFinal, yFinal;
+        if(currentIndex == 1) {
+          //tap.  do nothing
+          println("tap received");
+        }
+        else 
+        {
+          println("swipe received");
+          if(currentIndex<3) {
+            xFinal=prevX[currentIndex-1];
+            yFinal=prevY[currentIndex-1];
+          } else {
+            xFinal=prevX[2];
+            yFinal=prevY[2];
+          }
+          
+          
+          if(xFinal - prevX[0] > sensitivity)
+            horiz = "right";
+          else if (xFinal - prevX[0] < -1 * sensitivity)
+            horiz = "left";
+          if(yFinal - prevY[0] > sensitivity)
+            vert = "down";
+          else if(yFinal - prevY[0] < -1 * sensitivity)
+            vert = "up";
+        }
+        currentIndex=0;
+      }
+      
+      else {
+        if(currentIndex < 3) {
+          prevX[currentIndex]=x;
+          prevY[currentIndex++]=y;
+        }
+      }
       
       //tap
       if(horiz.equals("tap") && vert.equals("tap")) {
@@ -172,8 +200,8 @@ public class WellRenderer extends AudioRenderer {
         shiftStart = vm.frameCount;
       }
       
-      prevX = x;
-      prevY = y;
+      prevX1 = x;
+      prevY1 = y;
     }
 	}
 }
