@@ -6,6 +6,12 @@ import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.SocketAddress;
+import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import javax.imageio.ImageIO;
 
@@ -33,12 +39,20 @@ public class VisualizationManager extends PApplet {
 	private AudioRenderer well;		// The renderers
 	private AudioPlayer song;		// The song
 	private int port;				// Port on which the server listens
-	private Server server;			// For receiving touch events
+	//private Server server;			// For receiving touch events
 	
+	private ArrayList<SocketAddress> addresses; 
+	private DatagramSocket ds; 
 	byte[] buffer;					// Buffer into which to read client data
 	
 	public VisualizationManager(String id) {
 		port = Integer.parseInt(id);
+		addresses = new ArrayList<SocketAddress>();
+		try {
+			ds = new DatagramSocket();
+		} catch (SocketException e) {
+			e.printStackTrace();
+		}
 		System.out.println("New VisualizationManager on port "+port);
 	}
 	
@@ -49,21 +63,23 @@ public class VisualizationManager extends PApplet {
 		
 		js = new JSMinim(this);
 		minim = new Minim(js);
-		song = minim.loadFile("paris.mp3", 1024);
+		song = minim.loadFile("beat.mp3", 1024);
 		song.play();
 		
 		well = new WellRenderer(this, song);
 		song.addListener(well);
 		well.setup();
 
-		server = new Server(this, port);
-		buffer = new byte[16];
+		// server = new Server(this, port);
+		buffer = new byte[1024];
 	}
 	
 	@Override
 	public void draw() {
 		well.draw();
-		Client client = server.available();
+		receive();
+		//Client client = server.available();
+		/*
 		if(client != null) {
 			// Launch new thread to read bytes and process here
 			client.readBytes(buffer);
@@ -75,6 +91,7 @@ public class VisualizationManager extends PApplet {
 			}
 			println("Read from "+client.ip()+": "+input);
 		}
+		*/
 		// Launch new thread to do the broadcasting here
         broadcast();
 	}
@@ -87,6 +104,10 @@ public class VisualizationManager extends PApplet {
 		song.close();
 		minim.stop();
 		super.stop();
+	}
+	
+	void receive() {
+		
 	}
 
 	// Function to broadcast a PImage over the Server (UDP probably)
@@ -106,7 +127,18 @@ public class VisualizationManager extends PApplet {
 			e.printStackTrace();
 		}
 	  	byte[] packet = baStream.toByteArray();
-	  	server.write(packet);
+	  	for(SocketAddress s : addresses) {
+		  	try {
+		  	    ds.send(new DatagramPacket(packet, packet.length, s));
+		  	} catch (Exception e) {
+		  	    e.printStackTrace();
+		  	}
+	  	}
+	  	// server.write(packet);
+	}
+	
+	public void addSockAddress(SocketAddress address) {
+		addresses.add(address);
 	}
 }
 

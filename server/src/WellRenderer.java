@@ -53,7 +53,7 @@ public class WellRenderer extends AudioRenderer {
 	      float w2 = (float) (width * aura), h2 = (float) (height * aura);
 	      // Create smoke effect
 	      if(vm.frameCount % delay == 0) {
-	    	  vm.image(vm.g, imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
+	    	  vm.image(vm.get(), imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
 	      }
 	      
 	      if(startingFrameForTap > 0 && vm.frameCount > startingFrameForTap + 10) {
@@ -118,7 +118,6 @@ public class WellRenderer extends AudioRenderer {
 	@Override
 	public void keyPressed() {
 		int keyPress = vm.keyCode;
-		println("keypress: "+keyPress);
 		//enter which will simulate a tap
 		if(keyPress==10) {
 			touchMultiplier = 75;
@@ -147,8 +146,6 @@ public class WellRenderer extends AudioRenderer {
 		}
 	}
 }
-
-
 
 class MovingThreshold {
 	public static final int Length = 1024;

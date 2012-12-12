@@ -1,4 +1,5 @@
 import processing.video.*;
+import processing.net.*;
 
 import javax.imageio.*;
 import java.awt.image.*; 
@@ -9,33 +10,54 @@ int clientPort = 10001;
 DatagramSocket ds; 
 // Capture object
 Capture cam;
+PImage img;
+int exitFrame;
+Server server;
 
 void setup() {
   size(320,240);
+  frameRate(48);
+  exitFrame = (int) (10*frameRate);
   // Setting up the DatagramSocket, requires try/catch
   try {
     ds = new DatagramSocket();
   } catch (SocketException e) {
     e.printStackTrace();
   }
+  server = new Server(this, clientPort);
+  // Initialize Camera
+  // cam = new Capture( this, width,height,30);
+}
+
+void captureEvent( Capture c ) {
+  c.read();
+  // Whenever we get a new image, send it!
+  broadcast(c);
 }
 
 void draw() {
-  background(frameCount%255, 0, 0);
-  broadcast();
+  if(frameCount < 120) {
+    img = loadImage("me.jpg");
+  }
+  else {
+    img = loadImage("avatar.jpg");
+  }
+  image(img,0,0);
+  broadcast(img);
+  
 }
 
 
 // Function to broadcast a PImage over UDP
 // Special thanks to: http://ubaa.net/shared/processing/udp/
 // (This example doesn't use the library, but you can!)
-void broadcast() {
+void broadcast(PImage img) {
   // We need a buffered image to do the JPG encoding
-  BufferedImage bimg = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
+  BufferedImage bimg = new BufferedImage( img.width,img.height, BufferedImage.TYPE_INT_RGB );
 
   // Transfer pixels from localFrame to the BufferedImage
-  loadPixels();
-  bimg.setRGB( 0, 0, width, height, pixels, 0, width);
+  img.loadPixels();
+  bimg.setRGB( 0, 0, img.width, img.height, img.pixels, 0, img.width);
 
   // Need these output streams to get image as bytes for UDP communication
   ByteArrayOutputStream baStream	= new ByteArrayOutputStream();
@@ -52,14 +74,17 @@ void broadcast() {
 
   // Get the byte array, which we will send out via UDP!
   byte[] packet = baStream.toByteArray();
-
+  server.write(packet);
   // Send JPEG data as a datagram
-  println("Sending datagram with " + packet.length + " bytes");
+  // println("Sending datagram with " + packet.length + " bytes");
+  
+  /*
   try {
     ds.send(new DatagramPacket(packet,packet.length, InetAddress.getByName("localhost"),clientPort));
   } 
   catch (Exception e) {
     e.printStackTrace();
   }
+  */
 }
 

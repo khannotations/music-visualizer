@@ -2,8 +2,10 @@ import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,7 +26,7 @@ public class ServiceThread extends Thread {
 	public ServiceThread(ServerSocket welcomeSocket, 
 			Map<String, String> updateTable /*, Map<String, SessionManager> sessionMap */ ) {
 		this.welcomeSocket = welcomeSocket;
-		initializeProcessing("10001");
+		initializeProcessing("10001", welcomeSocket.getLocalSocketAddress());
 		// this.sessionMap = sessionMap;
 	}
 	public void run() {
@@ -47,6 +49,7 @@ public class ServiceThread extends Thread {
 				}
 			}
 			processRequest(s);
+			
 		}
 	}
 	private void processRequest(Socket connSock) {
@@ -89,7 +92,7 @@ public class ServiceThread extends Thread {
 		    	mySession = new SessionManager(id);
 		    	sessionMap.put(id, mySession);
 		    	outputString = id;
-		    	initializeProcessing(id);
+		    	initializeProcessing(id, connSock.getLocalSocketAddress());
 		    } else if (action.equals("/join")) {
 		    	mySession.joinSession();
 		    } /* else if (action.equals("/touch")) {
@@ -115,9 +118,9 @@ public class ServiceThread extends Thread {
 		nextPort++;
 		return nextPort + "";
 	}
-	private void initializeProcessing(String id) {
-		// PApplet.main(new String[] { "--present", "VideoSender" });
+	private void initializeProcessing(String id, SocketAddress sockAddress) {
 		VisualizationManager vs = new VisualizationManager(id);
+		vs.addSockAddress(sockAddress);
 		PApplet.runSketch(new String[]{ "" }, vs);
 	}
 
