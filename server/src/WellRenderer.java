@@ -116,14 +116,14 @@ public class WellRenderer extends AudioRenderer {
 	}
 	
 	@Override
-	public void keyPressed() {
-		int keyPress = vm.keyCode;
-		//enter which will simulate a tap
+	public void touchEvent(String touchEvent) {
+		String[] event = touchEvent.split(":");
+		//tap
 		if(keyPress==10) {
 			touchMultiplier = 75;
 			startingFrameForTap = vm.frameCount;
 	    	}
-		//Arrow keys which will simulate swipes
+		//Direction of swipes
 		//left
 		if(keyPress==37) {
 			shiftDirection=1;
