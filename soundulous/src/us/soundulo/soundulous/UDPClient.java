@@ -62,7 +62,7 @@ public class UDPClient extends AsyncTask<String, Void, String> {
 	      InetAddress IPAddress = null;
 		try {
 			//IPAddress = InetAddress.getByName("localhost");
-			IPAddress = InetAddress.getByName("perch.zoo.cs.yale.edu");
+			IPAddress = InetAddress.getByName("rattlesnake.zoo.cs.yale.edu");
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
