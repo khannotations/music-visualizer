@@ -13,6 +13,7 @@ public class WellRenderer extends AudioRenderer {
 	MovingThreshold thrsh;
 	float touchMultiplier, threshold;
 	int startingFrameForTap, shiftDirection, shiftStart, addToRight, addUp, shakeMagnitude;
+	String event;
 	
 	private VisualizationManager vm;
 	
@@ -53,7 +54,7 @@ public class WellRenderer extends AudioRenderer {
 	      float w2 = (float) (width * aura), h2 = (float) (height * aura);
 	      // Create smoke effect
 	      if(vm.frameCount % delay == 0) {
-	    	  vm.image(vm.g, imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
+	    	  vm.image(vm.get(), imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
 	      }
 	      
 	      if(startingFrameForTap > 0 && vm.frameCount > startingFrameForTap + 10) {
@@ -113,10 +114,10 @@ public class WellRenderer extends AudioRenderer {
 	      vm.stroke(255);
 	      vm.line(w, height - 20, w, height - 20 + r2*100);
 	    }
+	    event = "";
 	}
 	
-	@Override
-	public void keyPressed() {
+	public void touchEvent(String event) {
 		int keyPress = vm.keyCode;
 		//enter which will simulate a tap
 		if(keyPress==10) {
@@ -144,6 +145,10 @@ public class WellRenderer extends AudioRenderer {
 			shiftDirection=4;
 			shiftStart = vm.frameCount;
 		}
+	}
+	
+	public void setEvent(String event) {
+		this.event = event;
 	}
 }
 

@@ -19,4 +19,5 @@ public abstract class AudioRenderer extends PApplet implements AudioListener {
 	}
 	public abstract void setup();
 	public abstract void draw();
+	public abstract void touchEvent(String event);
 }

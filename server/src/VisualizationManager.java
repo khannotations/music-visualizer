@@ -86,6 +86,9 @@ public class VisualizationManager extends PApplet {
 	
 	@Override
 	public void draw() {
+		if(receive.available()) {
+			well.touchEvent(receive.getData());
+		}
 		well.draw();
 		//receive();
 		//Client client = server.available();
@@ -104,16 +107,18 @@ public class VisualizationManager extends PApplet {
 		*/
 		// Launch new thread to do the broadcasting here
         //broadcast();
+		
 		if(broadcast.isAvailable()) {
 			loadPixels();
 			broadcast.updatePixels(pixels);
 		}
 		server.write(broadcast.getByteArray());
 	}	
-	
+	/*
 	public void keyPressed() {
 		well.keyPressed();
 	}
+	*/
 	
 	public void stop() {
 		song.close();
