@@ -12,6 +12,7 @@ import android.widget.Toast;
 public class TouchableView extends View {	
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
+	//UDPClient client;
 	//Context context = this.context;
 	private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
@@ -20,20 +21,30 @@ public class TouchableView extends View {
 	public TouchableView(Context context) {
 	    super(context);
 
+	    //client = new UDPClient();
+	    
+	    
 	    //gestureDetector = new GestureDetector(getContext(),
 	   //         new GestureListener(this));
 	    gestureListener = new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				sendCoordinates(event.getX(), event.getY());
-				return false;
+				return true;
 			}
 		};
 		this.setOnTouchListener(gestureListener);
 	}
 	
 	private void sendCoordinates(float x, float y) {
-		Toast.makeText(this.getContext(), "x is "+x+", y is "+y, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this.getContext(), "x is "+x+", y is "+y, Toast.LENGTH_SHORT).show();
+		try {
+			UDPClient.main("x:"+x+"y:"+y);
+			Toast.makeText(this.getContext(), "trying UDP", Toast.LENGTH_SHORT).show();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 //	public boolean onTouchEvent(MotionEvent event) {
