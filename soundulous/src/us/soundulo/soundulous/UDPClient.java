@@ -16,7 +16,7 @@ import android.widget.Toast;
 
 // simple UDP client taken from 
 // http://systembash.com/content/a-simple-java-udp-server-and-udp-client/
-public class UDPClient extends AsyncTask<String, Void, Void> {
+public class UDPClient extends AsyncTask<String, Void, String> {
 	private final static int portNumber = 6789;
 	private Context context;
 	
@@ -39,16 +39,16 @@ public class UDPClient extends AsyncTask<String, Void, Void> {
 	      //System.out.println("FROM SERVER:" + modifiedSentence);
 	      clientSocket.close();
 	   }*/
+	
 	public UDPClient(Context context) {
 		this.context = context;
 	}
-	
-	
+
 	@Override
-	protected Void doInBackground(String... text) {
+	protected String doInBackground(String... text) {
 		// TODO Auto-generated method stub
 		String input = text[0].toString();
-		Log.println(0, "UDP", input);
+		Log.d("UDP", input);
 		//Toast.makeText(this.context, input, Toast.LENGTH_SHORT).show();
 		//BufferedReader inFromUser =
 	      //   new BufferedReader(new InputStreamReader(System.in));
@@ -66,11 +66,11 @@ public class UDPClient extends AsyncTask<String, Void, Void> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	      byte[] sendData = new byte[1024];
-	      byte[] receiveData = new byte[1024];
+	      //byte[] sendData = new byte[1024];
+	     // byte[] receiveData = new byte[1024];
 	      //String sentence = inFromUser.readLine();
 	      //Toast.makeText(null, input, Toast.LENGTH_SHORT).show();
-	      sendData = input.getBytes();
+	      byte[] sendData = input.getBytes();
 	      DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, IPAddress, portNumber);
 	      try {
 			clientSocket.send(sendPacket);
@@ -78,16 +78,26 @@ public class UDPClient extends AsyncTask<String, Void, Void> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	      DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-	      try {
-			clientSocket.receive(receivePacket);
-		} catch (IOException e) {
+	      //DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+	      //try {
+			//clientSocket.receive(receivePacket);
+		//} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//	e.printStackTrace();
+		//}
 	      //String modifiedSentence = new String(receivePacket.getData());
 	      //System.out.println("FROM SERVER:" + modifiedSentence);
-	      clientSocket.close();
-		return null;
+	    // clientSocket.close();
+		return input;
 	}
+	
+	@Override
+    protected void onPreExecute() {
+	
+    }
+	
+	@Override
+    protected void onPostExecute(String result) {
+		Toast.makeText(this.context, result, Toast.LENGTH_SHORT).show();
+    }
 }
