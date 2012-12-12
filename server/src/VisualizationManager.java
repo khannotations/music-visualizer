@@ -119,30 +119,6 @@ public class VisualizationManager extends PApplet {
 	// Function to broadcast a PImage over the Server (UDP probably)
 	// Special thanks to: http://ubaa.net/shared/processing/udp/
 	// (This example doesn't use the library, but you can!)
-	void broadcast() {
-		loadPixels();
-		BufferedImage bimg = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
-		// Transfer pixels from localFrame to the BufferedImage
-		bimg.setRGB( 0, 0, width, height, pixels, 0, width);
-		ByteArrayOutputStream baStream	= new ByteArrayOutputStream();
-		BufferedOutputStream bos		= new BufferedOutputStream(baStream);
-		try {
-			ImageIO.write(bimg, "jpg", bos);
-		} 
-		catch (IOException e) {
-			e.printStackTrace();
-		}
-	  	byte[] packet = baStream.toByteArray();
-	  	for(SocketAddress s : addresses) {
-		  	try {
-		  	    ds.send(new DatagramPacket(packet, packet.length, s));
-		  	} catch (Exception e) {
-		  	    e.printStackTrace();
-		  	}
-	  	}
-	  	// server.write(packet);
-	}
-	
 	public void addSockAddress(SocketAddress address) {
 		addresses.add(address);
 	}

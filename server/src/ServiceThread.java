@@ -95,14 +95,7 @@ public class ServiceThread extends Thread {
 		    	initializeProcessing(id, connSock.getLocalSocketAddress());
 		    } else if (action.equals("/join")) {
 		    	mySession.joinSession();
-		    } /* else if (action.equals("/touch")) {
-		    	float startX = Float.parseFloat(map.get("startX"));
-		    	float startY = Float.parseFloat(map.get("startY"));
-		    	float endX = Float.parseFloat(map.get("endX"));
-		    	float endY = Float.parseFloat(map.get("endY"));
-		    	//mySession.updateBitMap(startX, startY, endX, endY);
-		    	outputString = "BitMap for "+mySession.getId()+" updated.";
-		    } */ else {
+		    } else {
 		    	outputError(404, "No such path.");
 		    	connSock.close();
 		    	return;
