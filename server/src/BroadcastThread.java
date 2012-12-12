@@ -8,12 +8,23 @@ import javax.imageio.ImageIO;
 class BroadcastThread extends Thread {
   
 	boolean running;
+  int width, height;
+  int[] pixels;
   
-  	public BroadcastThread() {
+  byte[] toReturn;
+  
+  	public BroadcastThread(int width, int height) {
   		running = false;
+      this.width = width;
+      this.height = height;
+      toReturn = null;
   	}
+    
+    public void updatePixels(int[] pixels) {
+      this.pixels = pixels;
+    }
   
-  	public byte[] run(int[] pixels, int width, int height) {
+  	public void run() {
   		running = true;
   		BufferedImage bimg = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
   		// Transfer pixels from localFrame to the BufferedImage
@@ -27,9 +38,12 @@ class BroadcastThread extends Thread {
   			e.printStackTrace();
   		}
   		running = false;
-  		return baStream.toByteArray();
+  		toReturn = baStream.toByteArray();
   	}
   	public boolean isAvailable() {
   		return !running;
   	}
+    public byte[] returnByteArray() {
+      return toReturn;
+    }
 }
