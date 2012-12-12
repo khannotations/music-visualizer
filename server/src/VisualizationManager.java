@@ -40,7 +40,8 @@ public class VisualizationManager extends PApplet {
 	private AudioPlayer song;		// The song
 	private int port;				// Port on which the server listens
 	private Server server;			// For receiving touch events
-	BroadcastThread thread; //thread for the broadcasting
+	BroadcastThread broadcast; //thread for the broadcasting
+	ReceiveThread receive;  //thread to receive touch events
 	
 	private ArrayList<SocketAddress> addresses; 
 	private DatagramSocket ds; 
@@ -73,13 +74,24 @@ public class VisualizationManager extends PApplet {
 
 		server = new Server(this, port);
 		buffer = new byte[1024];
-		thread = new BroadcastThread();
+
+		broadcast = new BroadcastThread(width, height);
+		receive = new ReceiveThread(port);
+    	try {
+    		broadcast.start();
+    		receive.start();
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
 	}
 	
 	@Override
 	public void draw() {
+		if(receive.available()) {
+			well.touchEvent(receive.getData());
+		}
 		well.draw();
-		receive();
+		//receive();
 		//Client client = server.available();
 		/*
 		if(client != null) {
@@ -96,15 +108,18 @@ public class VisualizationManager extends PApplet {
 		*/
 		// Launch new thread to do the broadcasting here
         //broadcast();
-		if(thread.isAvailable()) {
-			loadPixels();
-			server.write(thread.run(pixels, width, height));
+		
+		loadPixels();
+		broadcast.updatePixels(pixels);
+		if(broadcast.available()) {
+			server.write(broadcast.getData());
 		}
-	}
-	
+	}	
+	/*
 	public void keyPressed() {
 		well.keyPressed();
 	}
+	*/
 	
 	public void stop() {
 		song.close();
