@@ -39,13 +39,14 @@ public class TouchableView extends View {
 	private void sendCoordinates(float x, float y) {
 		//Toast.makeText(this.getContext(), "x is "+x+", y is "+y, Toast.LENGTH_SHORT).show();
 		try {
-			UDPClient.main("x:"+x+"y:"+y);
-			Toast.makeText(this.getContext(), "trying UDP", Toast.LENGTH_SHORT).show();
+			new UDPClient(this.getContext()).execute("x:"+x+"y:"+y);
+			//Toast.makeText(this.getContext(), "trying UDP", Toast.LENGTH_SHORT).show();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
+	
 	
 //	public boolean onTouchEvent(MotionEvent event) {
 //	    return gestureDetector.onTouchEvent(event);
