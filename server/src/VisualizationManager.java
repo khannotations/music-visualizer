@@ -40,8 +40,8 @@ public class VisualizationManager extends PApplet {
 	private AudioPlayer song;		// The song
 	private int port;				// Port on which the server listens
 	private Server server;			// For receiving touch events
-	BroadcastThread thread; //thread for the broadcasting
-  UDPServerThread receive;  //thread to receive touch events
+	BroadcastThread broadcast; //thread for the broadcasting
+	UDPServerThread receive;  //thread to receive touch events
 	
 	private ArrayList<SocketAddress> addresses; 
 	private DatagramSocket ds; 
@@ -74,14 +74,14 @@ public class VisualizationManager extends PApplet {
 
 		server = new Server(this, port);
 		buffer = new byte[1024];
-		thread = new BroadcastThread(width, height);
-    receive = new UDPServerThread();
-    try {
-      receive.start();
-      println("Thread finished");
-    } catch(Exception e) {
-      println("error");
-    }
+		broadcast = new BroadcastThread(width, height);
+		receive = new UDPServerThread();
+    	try {
+    		broadcast.start();
+    		receive.start();
+    	} catch(Exception e) {
+    		e.printStackTrace();
+    	}
 	}
 	
 	@Override
@@ -104,13 +104,12 @@ public class VisualizationManager extends PApplet {
 		*/
 		// Launch new thread to do the broadcasting here
         //broadcast();
-		if(thread.isAvailable()) {
+		if(broadcast.isAvailable()) {
 			loadPixels();
-      thread.updatePixels(pixels);
-      thread.start();
-			server.write(thread.returnByteArray());
+			broadcast.updatePixels(pixels);
 		}
-	}
+		server.write(broadcast.getByteArray());
+	}	
 	
 	public void keyPressed() {
 		well.keyPressed();
