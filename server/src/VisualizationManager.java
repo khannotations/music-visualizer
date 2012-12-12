@@ -109,15 +109,11 @@ public class VisualizationManager extends PApplet {
 		// Launch new thread to do the broadcasting here
         //broadcast();
 		
-		if(broadcast.isAvailable()) {
-			loadPixels();
-			broadcast.updatePixels(pixels);
+		loadPixels();
+		broadcast.updatePixels(pixels);
+		if(broadcast.available()) {
+			server.write(broadcast.getData());
 		}
-    byte[] ba = broadcast.getByteArray();
-    if(ba != null)
-      server.write(ba);
-    //else
-      //println("Nothin to write!");
 	}	
 	/*
 	public void keyPressed() {

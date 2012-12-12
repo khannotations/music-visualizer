@@ -15,6 +15,7 @@ public class WellRenderer extends AudioRenderer {
 	int startingFrameForTap, shiftDirection, shiftStart, addToRight, addUp, shakeMagnitude;
   
   float prevX, prevY;
+
 	
 	private VisualizationManager vm;
 	
