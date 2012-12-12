@@ -99,6 +99,7 @@ public class UDPClient extends AsyncTask<String, Void, String> {
 	
 	@Override
     protected void onPostExecute(String result) {
-		Toast.makeText(this.context, result, Toast.LENGTH_SHORT).show();
+		//Toast.makeText(this.context, result, Toast.LENGTH_SHORT).show();
+		Log.d("UDP", result);
     }
 }
