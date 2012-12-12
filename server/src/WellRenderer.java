@@ -13,6 +13,8 @@ public class WellRenderer extends AudioRenderer {
 	MovingThreshold thrsh;
 	float touchMultiplier, threshold;
 	int startingFrameForTap, shiftDirection, shiftStart, addToRight, addUp, shakeMagnitude;
+  
+  float prevX, prevY;
 	
 	private VisualizationManager vm;
 	
@@ -31,6 +33,7 @@ public class WellRenderer extends AudioRenderer {
 	    red = 35;
 	    green = 255;
 	    blue = 185;
+      prevX = prevY = -1;
 	    // Lots of potential for changing visualization with this!!
 	    imgOffset = -1;			// Must be negative
 	    
@@ -53,7 +56,7 @@ public class WellRenderer extends AudioRenderer {
 	      float w2 = (float) (width * aura), h2 = (float) (height * aura);
 	      // Create smoke effect
 	      if(vm.frameCount % delay == 0) {
-	    	  vm.image(vm.g, imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
+	    	  vm.image(vm.get(), imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
 	      }
 	      
 	      if(startingFrameForTap > 0 && vm.frameCount > startingFrameForTap + 10) {
@@ -84,11 +87,11 @@ public class WellRenderer extends AudioRenderer {
 	          if(shiftStart!=0 && vm.frameCount<shiftStart+60) {
 	        	  if(shiftDirection==1) {
 	        		  addToRight = -1;
-	        	  } else if (shiftDirection==2) {
+	        	  } if (shiftDirection==2) {
 	        		  addUp = -1;
-	        	  } else if(shiftDirection==3) {
+	        	  } if(shiftDirection==3) {
 	        		  addToRight = 1;
-	        	  } else if(shiftDirection==4) {
+	        	  } if(shiftDirection==4) {
 	        		  addUp = 1;
 	        	  }
 	          } else {
@@ -115,37 +118,63 @@ public class WellRenderer extends AudioRenderer {
 	    }
 	}
 	
-	@Override
+
 	public void touchEvent(String touchEvent) {
-		String[] event = touchEvent.split(":");
-		//tap
-		if(keyPress==10) {
-			touchMultiplier = 75;
-			startingFrameForTap = vm.frameCount;
-	    	}
-		//Direction of swipes
-		//left
-		if(keyPress==37) {
-			shiftDirection=1;
-			shiftStart = vm.frameCount;
-		}
-		//up
-		else if(keyPress==38) {
-			shiftDirection=2;
-			shiftStart = vm.frameCount;
-		}
-		//right
-		else if(keyPress==39) {
-			shiftDirection=3;
-			shiftStart = vm.frameCount;
-		}
-		//down
-		else if(keyPress==40) {
-			shiftDirection=4;
-			shiftStart = vm.frameCount;
-		}
+    if(touchEvent != null) {
+      String[] event = touchEvent.split(":");
+      int sensitivity = 5;
+      
+      float x = Float.parseFloat(event[0]);
+      float y = Float.parseFloat(event[1]);
+      if(prevX == -1)
+        prevX = x;
+      if(prevY == -1)
+        prevY = y;
+      String horiz = "tap";
+      String vert = "tap";
+      
+      if(x - prevX > sensitivity)
+        horiz = "right";
+      else if (x - prevX < -1 * sensitivity)
+        horiz = "left";
+      if(y - prevY > sensitivity)
+        vert = "down";
+      else if(y - prevY < -1 * sensitivity)
+        vert = "up";
+      
+      //tap
+      if(horiz.equals("tap") && vert.equals("tap")) {
+        touchMultiplier = 75;
+        startingFrameForTap = vm.frameCount;
+      }
+      
+      //Direction of swipes
+      //left
+      if(horiz.equals("left")) {
+        shiftDirection=1;
+        shiftStart = vm.frameCount;
+      }
+      else if(horiz.equals("right")) {
+        shiftDirection=3;
+        shiftStart = vm.frameCount;
+      }
+      //up
+      if(vert.equals("up")) {
+        shiftDirection=2;
+        shiftStart = vm.frameCount;
+      }
+      //right
+      
+      //down
+      else if(vert.equals("down")) {
+        shiftDirection=4;
+        shiftStart = vm.frameCount;
+      }
+      
+      prevX = x;
+      prevY = y;
+    }
 	}
-  
 }
 
 class MovingThreshold {

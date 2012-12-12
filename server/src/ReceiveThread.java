@@ -11,6 +11,7 @@ class ReceiveThread extends Thread
 	
 	public ReceiveThread(int p) {
 		port = p;
+    port = 6799;
 		running = false;
 		available = true;
 		try {
@@ -52,6 +53,7 @@ class ReceiveThread extends Thread
         e.printStackTrace();
       }
       data = new String(receivePacket.getData());
+      System.out.println("Touch event: "+ data);
     }
 	
 	public void quit() {
