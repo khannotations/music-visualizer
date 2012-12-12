@@ -1,7 +1,8 @@
 package us.soundulo.soundulous;
 
 import android.content.Context;
-import android.os.Bundle;
+import android.graphics.Color;
+//import android.os.Bundle;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
@@ -11,7 +12,7 @@ import android.widget.Toast;
 public class TouchableView extends View {	
 	private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
-	Context context = this.context;
+	//Context context = this.context;
 	private static final int SWIPE_MIN_DISTANCE = 120;
     private static final int SWIPE_MAX_OFF_PATH = 250;
     private static final int SWIPE_THRESHOLD_VELOCITY = 200;
@@ -19,15 +20,20 @@ public class TouchableView extends View {
 	public TouchableView(Context context) {
 	    super(context);
 
-
-	    gestureDetector = new GestureDetector(getContext(),
-	            new GestureListener());
+	    //gestureDetector = new GestureDetector(getContext(),
+	   //         new GestureListener(this));
 	    gestureListener = new View.OnTouchListener() {
 			@Override
 			public boolean onTouch(View v, MotionEvent event) {
-				return gestureDetector.onTouchEvent(event);
+				sendCoordinates(event.getX(), event.getY());
+				return false;
 			}
 		};
+		this.setOnTouchListener(gestureListener);
+	}
+	
+	private void sendCoordinates(float x, float y) {
+		Toast.makeText(this.getContext(), "x is "+x+", y is "+y, Toast.LENGTH_SHORT).show();
 	}
 	
 //	public boolean onTouchEvent(MotionEvent event) {
@@ -35,16 +41,25 @@ public class TouchableView extends View {
 //	}
 	// taken mostly from http://stackoverflow.com/questions/937313/android-basic-gesture-detection
 	private class GestureListener extends SimpleOnGestureListener {
+		private TouchableView view;
+
+		private GestureListener(TouchableView view) {
+			this.view = view;
+		}
+		
 		@Override
 		public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+			Toast.makeText(getContext(), "Fling received", Toast.LENGTH_SHORT).show();
             try {
                 if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
                     return false;
                 // right to left swipe
                 if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Toast.makeText(context, "Left Swipe", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Left Swipe", Toast.LENGTH_SHORT).show();
+                    view.setBackgroundColor(Color.parseColor("black"));
                 }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
-                    Toast.makeText(context, "Right Swipe", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Right Swipe", Toast.LENGTH_SHORT).show();
+                    view.setBackgroundColor(Color.parseColor("red"));
                 }
             } catch (Exception e) {
                 // nothing
