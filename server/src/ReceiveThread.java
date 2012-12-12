@@ -1,7 +1,7 @@
 import java.net.*;
 import java.io.IOException;
 
-class UDPServerThread extends Thread
+class ReceiveThread extends Thread
 {
 	private DatagramSocket ds;
 	private int port;
@@ -9,7 +9,7 @@ class UDPServerThread extends Thread
 	byte[] receiveData, sendData;
 	String data;
 	
-	public UDPServerThread(int p) {
+	public ReceiveThread(int p) {
 		port = p;
 		running = false;
 		available = true;

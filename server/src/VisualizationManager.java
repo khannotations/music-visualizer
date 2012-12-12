@@ -41,7 +41,7 @@ public class VisualizationManager extends PApplet {
 	private int port;				// Port on which the server listens
 	private Server server;			// For receiving touch events
 	BroadcastThread broadcast; //thread for the broadcasting
-	UDPServerThread receive;  //thread to receive touch events
+	ReceiveThread receive;  //thread to receive touch events
 	
 	private ArrayList<SocketAddress> addresses; 
 	private DatagramSocket ds; 
@@ -75,7 +75,7 @@ public class VisualizationManager extends PApplet {
 		server = new Server(this, port);
 		buffer = new byte[1024];
 		broadcast = new BroadcastThread(width, height);
-		receive = new UDPServerThread();
+		receive = new ReceiveThread(port);
     	try {
     		broadcast.start();
     		receive.start();
