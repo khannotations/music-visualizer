@@ -10,6 +10,8 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URL;
+import java.net.URLConnection;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -66,28 +68,16 @@ public class TouchableView extends ImageView {
 		Runnable runnable = new Runnable() {
 			public void run() {
 				try {
-					DatagramSocket clientsocket=new DatagramSocket(null); // create a new socket 
-					clientsocket.setReuseAddress(true); // allow to reuse after this port has been
-					// connected to already
-					clientsocket.bind(new InetSocketAddress(port)); // actually bind the socket
-					byte[] receivedata = new byte[1024];
+					URL url = new URL("http://rattlesnake.zoo.cs.yale.edu:10001");
+					URLConnection conn = url.openConnection();
+			        conn.connect();
 					while (true) {
-				        DatagramPacket recv_packet = new DatagramPacket(receivedata, receivedata.length);
-				        Log.d("UDP", "S: Receiving...");
-				        clientsocket.receive(recv_packet); // blocking call to receive a packet
-				        // some debug code
-				        InetAddress ipaddress = recv_packet.getAddress();
-				        int port = recv_packet.getPort();
-				        Log.d("IPAddress : ",ipaddress.toString());
-				        Log.d(" Port : ",Integer.toString(port));
-				        // RECEIVE AND HANDLE JPEG
-						ByteArrayInputStream i = new ByteArrayInputStream(receivedata); // create a new byte steam
-						 final Bitmap bp = 
-		                         BitmapFactory.decodeStream(
-		                           new FlushedInputStream(i));
+				        InputStream is = conn.getInputStream();
+						BufferedInputStream bis = new BufferedInputStream(is);
+				        final Bitmap bm = BitmapFactory.decodeStream(bis);
 				        handler.post(new Runnable() { // post to UI thread
 				        	public void run() {
-				        		view.setImageBitmap(bp);
+				        		view.setImageBitmap(bm);
 				        	}
 				        });
 					}
