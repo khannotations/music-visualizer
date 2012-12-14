@@ -84,7 +84,7 @@ public class MainActivity extends Activity{
     			}
     			httpconn.disconnect();
     			if (touchable.getPort() != port) {
-    				touchable.setPort(port);
+    				touchable.setConnection(urlString, port);
     			}
     		}
     		catch (Exception e) {

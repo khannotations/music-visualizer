@@ -11,6 +11,7 @@ import java.net.UnknownHostException;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -62,7 +63,7 @@ public class UDPClient extends AsyncTask<String, Void, String> {
 	      InetAddress IPAddress = null;
 		try {
 			//IPAddress = InetAddress.getByName("localhost");
-			IPAddress = InetAddress.getByName("perch.zoo.cs.yale.edu");
+			IPAddress = InetAddress.getByName(text[1].toString());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -1,44 +1,27 @@
 package us.soundulo.soundulous;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
+
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.DatagramPacket;
-import java.net.DatagramSocket;
-import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.URL;
 import java.net.URLConnection;
 
 import android.content.Context;
-import android.graphics.Color;
-//import android.os.Bundle;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
-import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.MotionEvent;
 import android.view.View;
 
 import android.widget.ImageView;
-import android.widget.Toast;
 
 public class TouchableView extends ImageView {	
-	//private GestureDetector gestureDetector;
 	View.OnTouchListener gestureListener;
-	//UDPClient client;
-	//Context context = this.context;
-	private static final int SWIPE_MIN_DISTANCE = 120;
-    private static final int SWIPE_MAX_OFF_PATH = 250;
-    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
 	private int port = -1;
-	//private GestureDetector gestures;
+	private String url = "perch.zoo.cs.yale.edu";
 	private Handler handler;
 	private Thread receiveThread;
 	
@@ -51,7 +34,6 @@ public class TouchableView extends ImageView {
 	    //gestureDetector = new GestureDetector(getContext(),
 	   //         new GestureListener(this));
 	    gestureListener = new View.OnTouchListener() {
-			@Override
 			public boolean onTouch(View v, MotionEvent event) {
 				sendCoordinates(event.getX(), event.getY());
 				return true;
@@ -65,11 +47,11 @@ public class TouchableView extends ImageView {
 	
 	private void sendCoordinates(float x, float y) {
 		//Toast.makeText(this.getContext(), "x is "+x+", y is "+y, Toast.LENGTH_SHORT).show();
-		new UDPClient(this.getContext()).execute(x+":"+y);
+		new UDPClient(this.getContext()).execute(x+":"+y, url);
 		//Toast.makeText(this.getContext(), "UDP sent", Toast.LENGTH_SHORT).show();
 	}
 	
-	
+	/*
 //	public boolean onTouchEvent(MotionEvent event) {
 //	    return gestureDetector.onTouchEvent(event);
 //	}
@@ -100,32 +82,38 @@ public class TouchableView extends ImageView {
             }
             return false;
         }
-	}
+	} */
 	
 	public int getPort() {
 		return port;
 	}
 	
-	public int setPort(int newPort) {
-		receiveThread.interrupt(); // interrupt the running thread
-		System.out.println("Stopping thread listening to port "+port);
+	public void setConnection(String urlText, int newPort) {
+		receiveThread.interrupt();
+		System.out.println("Stopping thread listening to port "+url+port);
+		url = urlText;
 		port = newPort;
-		System.out.println("Starting thread listening to port "+port);
-		startReceiveThread(this);
-		return port;
+		System.out.println("Starting thread listening to port "+url+port);
+		startReceiveThread(this);		
 	}
 	
 	private void startReceiveThread(final ImageView view) {
 		Runnable runnable = new Runnable() {
 			public void run() {
 				try {
-					URL url = new URL("http://rattlesnake.zoo.cs.yale.edu:10001");
-					URLConnection conn = url.openConnection();
+					URL urlObj = new URL("http://"+url+":"+port);
+					URLConnection conn = urlObj.openConnection();
 			        conn.connect();
 					while (true) {
+						System.out.println("in loop");
 				        InputStream is = conn.getInputStream();
+				        // got input stream
+						System.out.println("got input stream");
 						BufferedInputStream bis = new BufferedInputStream(is);
+						// decoding stream
 				        final Bitmap bm = BitmapFactory.decodeStream(bis);
+						System.out.println("decoding stream");
+				        // decoded stream
 				        handler.post(new Runnable() { // post to UI thread
 				        	public void run() {
 				        		view.setImageBitmap(bm);
