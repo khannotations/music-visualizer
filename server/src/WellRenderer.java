@@ -59,7 +59,7 @@ public class WellRenderer extends AudioRenderer {
 	      float w2 = (float) (width * aura), h2 = (float) (height * aura);
 	      // Create smoke effect
 	      if(vm.frameCount % delay == 0) {
-	    	  vm.image(vm.get(), imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
+	    	  vm.image(vm.g, imgOffset, imgOffset, width-2*imgOffset, height-2*imgOffset);
 	      }
 	      
 	      if(startingFrameForTap > 0 && vm.frameCount > startingFrameForTap + 10) {
@@ -123,87 +123,121 @@ public class WellRenderer extends AudioRenderer {
 	
 
 	public void touchEvent(String touchEvent) {
-    if(touchEvent != null) {
-      String[] event = touchEvent.split(":");
-      int sensitivity = 4;
-      
-      float x = Float.parseFloat(event[0]);
-      float y = Float.parseFloat(event[1]);
-      String horiz = "tap";
-      String vert = "tap";
-      
-      println(prevX1 + " " + prevY1);
-      if(prevX1==x && prevY1==y) {
-        //register gesture
-        float xFinal, yFinal;
-        if(currentIndex == 1) {
-          //tap.  do nothing
-          println("tap received");
-        }
-        else 
-        {
-          println("swipe received");
-          if(currentIndex<3) {
-            xFinal=prevX[currentIndex-1];
-            yFinal=prevY[currentIndex-1];
-          } else {
-            xFinal=prevX[2];
-            yFinal=prevY[2];
-          }
-          
-          
-          if(xFinal - prevX[0] > sensitivity)
-            horiz = "right";
-          else if (xFinal - prevX[0] < -1 * sensitivity)
-            horiz = "left";
-          if(yFinal - prevY[0] > sensitivity)
-            vert = "down";
-          else if(yFinal - prevY[0] < -1 * sensitivity)
-            vert = "up";
-        }
-        currentIndex=0;
-      }
-      
-      else {
-        if(currentIndex < 3) {
-          prevX[currentIndex]=x;
-          prevY[currentIndex++]=y;
-        }
-      }
-      
-      //tap
-      if(horiz.equals("tap") && vert.equals("tap")) {
-        touchMultiplier = 75;
-        startingFrameForTap = vm.frameCount;
-      }
-      
-      //Direction of swipes
-      //left
-      if(horiz.equals("left")) {
-        shiftDirection=1;
-        shiftStart = vm.frameCount;
-      }
-      else if(horiz.equals("right")) {
-        shiftDirection=3;
-        shiftStart = vm.frameCount;
-      }
-      //up
-      if(vert.equals("up")) {
-        shiftDirection=2;
-        shiftStart = vm.frameCount;
-      }
-      //right
-      
-      //down
-      else if(vert.equals("down")) {
-        shiftDirection=4;
-        shiftStart = vm.frameCount;
-      }
-      
-      prevX1 = x;
-      prevY1 = y;
-    }
+	    if(touchEvent != null) {
+	      String[] event = touchEvent.split(":");
+	      int sensitivity = 4;
+	      
+	      float x = Float.parseFloat(event[0]);
+	      float y = Float.parseFloat(event[1]);
+	      String horiz = "tap";
+	      String vert = "tap";
+	      
+	      println(prevX1 + " " + prevY1);
+	      if(prevX1==x && prevY1==y) {
+	        //register gesture
+	        float xFinal, yFinal;
+	        if(currentIndex <= 1) {
+	          //tap.  do nothing
+	          println("tap received");
+	        }
+	        else 
+	        {
+	          println("swipe received");
+	          if(currentIndex<3) {
+	            xFinal=prevX[currentIndex-1];
+	            yFinal=prevY[currentIndex-1];
+	          } else {
+	            xFinal=prevX[2];
+	            yFinal=prevY[2];
+	          }
+	          
+	          
+	          if(xFinal - prevX[0] > sensitivity)
+	            horiz = "right";
+	          else if (xFinal - prevX[0] < -1 * sensitivity)
+	            horiz = "left";
+	          if(yFinal - prevY[0] > sensitivity)
+	            vert = "down";
+	          else if(yFinal - prevY[0] < -1 * sensitivity)
+	            vert = "up";
+	        }
+	        currentIndex=0;
+	      }
+	      
+	      else {
+	        if(currentIndex < 3) {
+	          prevX[currentIndex]=x;
+	          prevY[currentIndex++]=y;
+	        }
+	      }
+	      
+	      //tap
+	      if(horiz.equals("tap") && vert.equals("tap")) {
+	        touchMultiplier = 75;
+	        startingFrameForTap = vm.frameCount;
+	      }
+	      
+	      //Direction of swipes
+	      //left
+	      if(horiz.equals("left")) {
+	        shiftDirection=1;
+	        shiftStart = vm.frameCount;
+	      }
+	      else if(horiz.equals("right")) {
+	        shiftDirection=3;
+	        shiftStart = vm.frameCount;
+	      }
+	      //up
+	      if(vert.equals("up")) {
+	        shiftDirection=2;
+	        shiftStart = vm.frameCount;
+	      }
+	      //right
+	      
+	      //down
+	      else if(vert.equals("down")) {
+	        shiftDirection=4;
+	        shiftStart = vm.frameCount;
+	      }
+	      
+	      prevX1 = x;
+	      prevY1 = y;
+	    }
 	}
+	public void keyPressed() {
+		   int keyPress = vm.keyCode;
+		   //enter which will simulate a tap
+		   if(keyPress==10) {
+			   vm.background(0);
+		     touchMultiplier = 75;
+		     startingFrameForTap = vm.frameCount;
+		    }
+		   
+		   //Arrow keys which will simulate swipes
+		   //left
+		   if(keyPress==37) {
+		     shiftDirection=1;
+		     shiftStart=vm.frameCount;
+		   }
+		   
+		   //up
+		   else if(keyPress==38) {
+		     shiftDirection=2;
+		     shiftStart=vm.frameCount;
+		   }
+		   
+		   //right
+		   else if(keyPress==39) {
+		     shiftDirection=3;
+		     shiftStart=vm.frameCount;
+		   }
+		   
+		   //down
+		   else if(keyPress==40) {
+		     shiftDirection=4;
+		     shiftStart=vm.frameCount;
+		   }
+		}
 }
 
 class MovingThreshold {

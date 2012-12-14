@@ -114,7 +114,7 @@ public class ServiceThread extends Thread {
 	private void initializeProcessing(String id, SocketAddress sockAddress) {
 		VisualizationManager vs = new VisualizationManager(id);
 		vs.addSockAddress(sockAddress);
-		PApplet.runSketch(new String[]{ "" }, vs);
+		PApplet.runSketch(new String[]{ "VisualizationManager" }, vs);
 	}
 
 	private void outputResponseHeader() throws Exception {
