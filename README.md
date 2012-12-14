@@ -22,3 +22,9 @@ Soundulous
 ==========
 
 All the Android app code for the project. This directory is also an Eclipse app. Download onto an Android (or run on an emulator) AFTER the server has been started, create a session and it will start receiving the visualization autmoatically.
+
+
+Music Visualizer
+==========
+
+The original Visualizer code, as written in the Processing IDE. Open MusicVisualizer.pde with Processing (http://processing.org) to view.
