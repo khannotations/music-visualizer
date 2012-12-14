@@ -10,6 +10,13 @@
  //                                                          //
  //  (c) Martin Schneider 2009                               //
  //                                                          //
+ //  Tweeked and adopted for the Android mobile platform     //
+ //  by Rafi Khan, Mike Levine, Hari Ganesan,                //
+ //     and Jacob Metrick                                    // 
+ //  December 12, 2012 for CS 434 at Yale University         //
+ //                                                          //
+ //                                                          //
+ //                                                          //
  //////////////////////////////////////////////////////////////
 
 
@@ -17,40 +24,49 @@ import ddf.minim.*;
 
 Minim minim;
 
-AudioPlayer groove;
-AudioRenderer radar, vortex, iso, graph;
-AudioRenderer[] visuals; 
+AudioPlayer song;
+// AudioRenderer radar, vortex, iso, graph;
+// AudioRenderer[] visuals;
+AudioRenderer well;
 
 int select;
  
 void setup()
 {
-  // setup graphics
-  size(640, 480, P3D);
-    
-  // setup player
-  minim = new Minim(this);
-  groove = minim.loadFile("paris.mp3", 1024);
-  groove.loop();  
+   // setup graphics
+   size(640, 480, P2D);
+   size(320, 240, P2D);
+   frameRate(30);
+   // setup player
+   minim = new Minim(this);
+   song = minim.loadFile("beat.mp3", 1024);
+   song.loop(); 
+   well = new WellRenderer(song);
+   song.addListener(well);
+    well.setup(); 
 
   // setup renderers
+  /*
   vortex = new VortexRenderer(groove);
   radar = new RadarRenderer(groove);
   iso = new IsometricRenderer(groove);
   
   graph = new VortexRenderer(groove);
-  
   visuals = new AudioRenderer[] {radar, vortex,  iso};
-  
   // activate first renderer in list
   select = 0;
   groove.addListener(visuals[select]);
   visuals[select].setup();
+  */
 }
  
 void draw()
 {
-  visuals[select].draw();
+  well.draw();
+  // visuals[select].draw();
+}
+void keyPressed() {
+  well.keyPress();
 }
  
 /*void keyPressed() {
@@ -63,7 +79,7 @@ void draw()
 
 void stop()
 {
-  groove.close();
+  song.close();
   minim.stop();
   super.stop();
 }

@@ -60,13 +60,13 @@ public class VisualizationManager extends PApplet {
 	
 	@Override
 	public void setup() {
-		size(320, 240);				// Standard phone size (landscape)
+		size(640, 480);				// Standard phone size (landscape)
 		frameRate(30);				// As good as we'll ever need
 		
 		js = new JSMinim(this);
 		minim = new Minim(js);
 		song = minim.loadFile("beat.mp3", 1024);
-		song.play();
+		song.loop();
 		
 		well = new WellRenderer(this, song);
 		song.addListener(well);
@@ -88,38 +88,24 @@ public class VisualizationManager extends PApplet {
 	@Override
 	public void draw() {
 		if(receive.available()) {
-			well.touchEvent(receive.getData());
-		}
-		well.draw();
-		//receive();
-		//Client client = server.available();
-		/*
-		if(client != null) {
-			// Launch new thread to read bytes and process here
-			client.readBytes(buffer);
-			String input = "<buffer error!>";
 			try {
-				input = new String(buffer, "UTF-8");
+				well.touchEvent(receive.getData());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-			println("Read from "+client.ip()+": "+input);
 		}
-		*/
-		// Launch new thread to do the broadcasting here
-        //broadcast();
-		
+		well.draw();
 		loadPixels();
 		broadcast.updatePixels(pixels);
 		if(broadcast.available()) {
 			server.write(broadcast.getData());
 		}
-	}	
-	/*
+	}
+	
+	@Override
 	public void keyPressed() {
 		well.keyPressed();
 	}
-	*/
 	
 	public void stop() {
 		song.close();

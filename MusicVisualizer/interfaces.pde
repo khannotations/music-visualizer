@@ -8,6 +8,7 @@ abstract class AudioRenderer implements AudioListener {
   synchronized void samples(float[] sampL, float[] sampR) { left = sampL; right = sampR; }
   abstract void setup();
   abstract void draw(); 
+  abstract void keyPress();
 }
 
 
